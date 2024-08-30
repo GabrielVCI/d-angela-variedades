@@ -1,0 +1,127 @@
+[33mcommit aba7e106413d173a64a6c60e3f255f7dc201a69f[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/FT-05-Database[m[33m, [m[1;31morigin/dev[m[33m, [m[1;32mdev[m[33m)[m
+Merge: 780c5b0 b51de27
+Author: Gabriel Valdez Corporan <94642045+GabrielVCI@users.noreply.github.com>
+Date:   Fri Aug 30 14:24:41 2024 -0400
+
+    Merge pull request #3 from GabrielVCI/FT-01-AppDbContex
+    
+    FT-01-AppDbContext
+
+[33mcommit b51de27cbfa89034e9de536e09e53a21fc1714a3[m[33m ([m[1;31morigin/FT-01-AppDbContex[m[33m, [m[1;32mFT-01-AppDbContex[m[33m)[m
+Author: Gabriel Valdez <GabrielVCI>
+Date:   Fri Aug 30 14:22:27 2024 -0400
+
+    FT-01-AppDbContext
+    
+    He realizado la configuración básica del AppDbContext
+
+[33mcommit 976e6cc36771e1d64d91df93459d5be0ed7e03fd[m
+Merge: d772773 780c5b0
+Author: Gabriel Valdez <GabrielVCI>
+Date:   Fri Aug 30 14:16:22 2024 -0400
+
+    Merge branch 'dev' into FT-01-AppDbContex
+
+[33mcommit d772773e884d4a46d0370daf86bd31e43ee83b04[m
+Author: Gabriel Valdez <GabrielVCI>
+Date:   Fri Aug 30 14:15:51 2024 -0400
+
+    Eliminando la carpeta obj
+
+[33mcommit 780c5b09235ca7f0f57ad358b943a4418dffcdf3[m
+Merge: 4130e0f 9c25b94
+Author: Gabriel Valdez <GabrielVCI>
+Date:   Fri Aug 30 14:14:12 2024 -0400
+
+    Cambios
+
+[33mcommit 4130e0faf77387e25529b02ef529c0bd9a9740fb[m
+Author: Gabriel Valdez <GabrielVCI>
+Date:   Fri Aug 30 14:11:36 2024 -0400
+
+    Git ignore
+
+[33mcommit 9c25b94815bd631f2b9e896283a90c7fc17cf809[m
+Merge: bc19e3a 4f25cec
+Author: Gabriel Valdez Corporan <94642045+GabrielVCI@users.noreply.github.com>
+Date:   Fri Aug 30 14:10:05 2024 -0400
+
+    Merge pull request #2 from GabrielVCI/feature/FT-04-repositorio
+    
+    FT-04-repositorio
+
+[33mcommit 4f25cec37bd9c0f4c9cd3331ddf8faf70be1e920[m[33m ([m[1;31morigin/feature/FT-04-repositorio[m[33m, [m[1;32mfeature/FT-04-repositorio[m[33m)[m
+Author: Gabriel Valdez <GabrielVCI>
+Date:   Fri Aug 30 14:07:41 2024 -0400
+
+    FT-04-repositorio
+    
+    He creado las clases que contendrán los métodos para realizar los queries a la base de datos
+
+[33mcommit bc19e3aa4371cf31ed18bab04eca2a13e3cf8807[m
+Author: Gabriel Valdez <GabrielVCI>
+Date:   Fri Aug 30 13:55:22 2024 -0400
+
+    Removiendo la carpeta obj
+
+[33mcommit de4ac4022faeb03aadcb3f32471842b42143a966[m
+Merge: 58bd8a2 77677cf
+Author: Gabriel Valdez <GabrielVCI>
+Date:   Fri Aug 30 13:37:37 2024 -0400
+
+    Merge branch 'dev' of https://github.com/GabrielVCI/d-angela-variedades into dev
+
+[33mcommit 58bd8a2c5804a0305213b6317ce6d4f5983b3ced[m
+Author: Gabriel Valdez <GabrielVCI>
+Date:   Fri Aug 30 13:37:04 2024 -0400
+
+    Assembly file
+
+[33mcommit 77677cf20265e5dae24646fee3cde18f901c4403[m
+Merge: e2619b2 750e3b2
+Author: Gabriel Valdez Corporan <94642045+GabrielVCI@users.noreply.github.com>
+Date:   Fri Aug 30 13:32:23 2024 -0400
+
+    Merge pull request #1 from GabrielVCI/feature/FT-03-Interfaces
+    
+    FT-03-Interfaces
+
+[33mcommit 750e3b218f0044ddcb6f38fa681badc1cef8e8d4[m[33m ([m[1;31morigin/feature/FT-03-Interfaces[m[33m, [m[1;32mfeature/FT-03-Interfaces[m[33m)[m
+Author: Gabriel Valdez <GabrielVCI>
+Date:   Fri Aug 30 13:29:56 2024 -0400
+
+    FT-03-Interfaces
+    
+    He creado las interfaces necesarias para trabajar en el proyecto.
+
+[33mcommit e2619b28bd63dcd3ca674dd17dd85ab9f6250611[m
+Author: Gabriel Valdez <GabrielVCI>
+Date:   Thu Aug 29 20:04:14 2024 -0400
+
+    Primero cambios
+    
+    Estructurando el proyecto y creando las entidades
+
+[33mcommit e5f056e3e55eb61277828ba53aaf9b22e0cac0a4[m
+Author: Gabriel Valdez <GabrielVCI>
+Date:   Thu Aug 29 20:02:42 2024 -0400
+
+    Agregando el Git Ignore
+
+[33mcommit 70ca86719c5329c639c59f8a46073c16a165cb69[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: Gabriel Valdez <GabrielVCI>
+Date:   Thu Aug 29 18:34:17 2024 -0400
+
+    Creación del proyecto
+
+[33mcommit a8fcaf26f210f29a7d6f36beb18d159cf77ad7f3[m
+Author: Gabriel Valdez Corporan <94642045+GabrielVCI@users.noreply.github.com>
+Date:   Thu Aug 29 17:03:50 2024 -0400
+
+    Update README.md
+
+[33mcommit 70b98db22bca09c5f4be9951cae4be1534bf9dd9[m
+Author: Gabriel Valdez Corporan <94642045+GabrielVCI@users.noreply.github.com>
+Date:   Wed Aug 28 13:17:44 2024 -0400
+
+    Initial commit
