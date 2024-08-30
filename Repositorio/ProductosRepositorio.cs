@@ -1,6 +1,8 @@
-﻿namespace d_angela_variedades.Repositorio
+﻿using d_angela_variedades.Interfaces;
+
+namespace d_angela_variedades.Repositorio
 {
-    public class ProductosRepositorio
+    public class ProductosRepositorio : IProductosRepositorio
     {
     }
 }
