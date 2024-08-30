@@ -1,6 +1,6 @@
 ﻿namespace d_angela_variedades.Interfaces
 {
-    public class ICategoriasRepositorio
+    public interface ICategoriasRepositorio
     {
     }
 }
