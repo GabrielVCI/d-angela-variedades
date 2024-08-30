@@ -2,7 +2,7 @@
 {
     public class Ventas
     {
-        public int Id_Venta { get; set; }
+        public int IdVenta { get; set; }
         public string Cliente { get; set; }
         public string Cod_Venta { get; set; }
         public string Desc_Prod { get; set; }
