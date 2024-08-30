@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Gabriel\\OneDrive\\Desktop\\Courses\\ASP.NET Core\\Projects with ASP.NET Core\\d-angela-variedades\\d-angela-variedades.csproj": {}
+    "C:\\Users\\Gabriel\\OneDrive\\Desktop\\Courses\\ASP.NET Core\\Projects with ASP.NET Core\\d-angela-variedades\\d-angela-variedades\\d-angela-variedades.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Gabriel\\OneDrive\\Desktop\\Courses\\ASP.NET Core\\Projects with ASP.NET Core\\d-angela-variedades\\d-angela-variedades.csproj": {
+    "C:\\Users\\Gabriel\\OneDrive\\Desktop\\Courses\\ASP.NET Core\\Projects with ASP.NET Core\\d-angela-variedades\\d-angela-variedades\\d-angela-variedades.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Gabriel\\OneDrive\\Desktop\\Courses\\ASP.NET Core\\Projects with ASP.NET Core\\d-angela-variedades\\d-angela-variedades.csproj",
+        "projectUniqueName": "C:\\Users\\Gabriel\\OneDrive\\Desktop\\Courses\\ASP.NET Core\\Projects with ASP.NET Core\\d-angela-variedades\\d-angela-variedades\\d-angela-variedades.csproj",
         "projectName": "d-angela-variedades",
-        "projectPath": "C:\\Users\\Gabriel\\OneDrive\\Desktop\\Courses\\ASP.NET Core\\Projects with ASP.NET Core\\d-angela-variedades\\d-angela-variedades.csproj",
+        "projectPath": "C:\\Users\\Gabriel\\OneDrive\\Desktop\\Courses\\ASP.NET Core\\Projects with ASP.NET Core\\d-angela-variedades\\d-angela-variedades\\d-angela-variedades.csproj",
         "packagesPath": "C:\\Users\\Gabriel\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Gabriel\\OneDrive\\Desktop\\Courses\\ASP.NET Core\\Projects with ASP.NET Core\\d-angela-variedades\\obj\\",
+        "outputPath": "C:\\Users\\Gabriel\\OneDrive\\Desktop\\Courses\\ASP.NET Core\\Projects with ASP.NET Core\\d-angela-variedades\\d-angela-variedades\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -48,6 +48,30 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.8, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

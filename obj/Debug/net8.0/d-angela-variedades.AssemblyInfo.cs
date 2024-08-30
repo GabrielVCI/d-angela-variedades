@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("d-angela-variedades")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+70ca86719c5329c639c59f8a46073c16a165cb69")]
 [assembly: System.Reflection.AssemblyProductAttribute("d-angela-variedades")]
 [assembly: System.Reflection.AssemblyTitleAttribute("d-angela-variedades")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
