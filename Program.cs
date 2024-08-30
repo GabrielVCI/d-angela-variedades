@@ -18,9 +18,11 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(opciones =>
 
 }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-
 builder.Services.AddTransient<IVentasRepositorio, VentasRepositorio>();
-
+builder.Services.AddTransient<ICategoriasRepositorio, CategoriaRepositorio>();
+builder.Services.AddTransient<ISubCategoriaRepositorio, SubCategoriaRepositorio>();
+builder.Services.AddTransient<IProductosRepositorio, ProductosRepositorio>();
+builder.Services.AddTransient<IEmpresasRepositorio, EmpresasRepositorios>();
 
 var app = builder.Build();
 
