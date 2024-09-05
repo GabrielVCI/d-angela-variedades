@@ -23,12 +23,34 @@ namespace d_angela_variedades
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<Categoria>()
+                .HasKey(c => c.IdCategoria)
+                .HasName("PrimaryKey_Categorias");            
+            
+            builder.Entity<Empresas>()
+                .HasKey(e => e.IdEmpresa)
+                .HasName("PrimaryKey_Empresas");            
+            
+            builder.Entity<Subcategoria>()
+                .HasKey(s => s.IdSubCategoria)
+                .HasName("PrimaryKey_SubCategorias");            
+            
+            builder.Entity<Ventas>()
+                .HasKey(v => v.IdVenta)
+                .HasName("PrimaryKey_Ventas");            
+            
+            builder.Entity<Productos>()
+                .HasKey(p => p.IdProducto)
+                .HasName("PrimaryKey_Producto");
+
             builder.Entity<IdentityUser>(entity =>
             {
                 entity.Property<string?>("LastName");
                 entity.Property<string?>("Name");
                 entity.Property<string?>("FTURL");
+                entity.Property<int>("EmpresaId");
             });
+
         }
     }
 

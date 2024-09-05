@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
-    <Folder Include="Servicios\" />
+    <Folder Include="wwwroot\LogoEmpresa\" />
   </ItemGroup>
 
   <ItemGroup>

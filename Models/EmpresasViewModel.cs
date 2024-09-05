@@ -30,9 +30,9 @@ namespace d_angela_variedades.Models
         [DataType(DataType.Password)]
         [StringLength(20, ErrorMessage = "Máximo 20 caracteres")]
         [Required(ErrorMessage = "Contraseña requerida")]
-        [Compare("Password")]
+        [Compare("Password", ErrorMessage = "Las contraseñas no coinciden")]
         public string ConfirmPassword { get; set; }
-        public IFormFile LogoEmpresa { get; set; }
+        public IFormFile? LogoEmpresa { get; set; }
 
         [EmailAddress]
         [Required(ErrorMessage = "Correo requerido")]
