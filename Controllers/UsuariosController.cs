@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
+using System.Text.Encodings.Web;
 
 namespace d_angela_variedades.Controllers
 {
@@ -117,7 +119,8 @@ namespace d_angela_variedades.Controllers
                 //Usando el servicio para almacenar fotos creado por mí  
                 nuevaEmpresa.URL = logo.Name;
             }
-            
+
+            nuevaEmpresa.URL = "";
             //Aclarando los cambios que haremos en el dbContext
             applicationDbContext.Add(nuevaEmpresa);
 
@@ -131,7 +134,25 @@ namespace d_angela_variedades.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Home");
+
+                //We need to generate a email confirmation token in order to send an email to the new user
+                var userToken = await userManager.GenerateEmailConfirmationTokenAsync(nuevoUsuario);
+
+                //Creating an action to set the authentication process
+                var callbackUrl = Url.Action(
+                    "ConfirmEmail", //This is the action in the controller
+                    "Usuarios", //this is the controller
+                    new { userId = nuevoUsuario.Id, userToken = userToken }, //These are the parameters the action needs
+                    protocol: HttpContext.Request.Scheme);
+
+
+                //Call the email sender service to send the email
+                await emailSender.SendEmailAsync(empresa.EmailAdministrador, "Confirma tu correo electronico",
+                    $"Este mensaje es para verificar que posees un correo electrónico real. <br>" +
+                    $"Una vez lo confirmes, serás redirigido al sitio de RealRDEstate. <br>" +
+                    $"Por favor, confirma tu correo electrónico <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'> aqui</a>");
+
+                return RedirectToAction("_ConfirmEmail", "Usuarios");
             }
 
             return View();
@@ -146,8 +167,7 @@ namespace d_angela_variedades.Controllers
                 return View(loginView);
             }
 
-            //Buscamos algun usuario que tenga como correo el otorgado por el usuario en el login 
-
+            //Buscamos algun usuario que tenga como correo el otorgado por el usuario en el login.
             var usuario = await applicationDbContext.Users.FirstOrDefaultAsync(user => user.UserName == loginView.UserName);
 
             if (usuario is null)
@@ -159,9 +179,32 @@ namespace d_angela_variedades.Controllers
             var signInUser = await signInManager
                 .PasswordSignInAsync(loginView.UserName, loginView.Password, loginView.RememberMe, lockoutOnFailure: false);
 
-            if(signInUser.Succeeded)
+            if(signInUser.Succeeded && usuario.EmailConfirmed)
             {
                 return RedirectToAction("Index", "Home");
+            }
+
+            else if (!usuario.EmailConfirmed)
+            {
+                //We need to generate a email confirmation token in order to send an email to the new user
+                var userToken = await userManager.GenerateEmailConfirmationTokenAsync(usuario);
+
+                //Creating an action to set the authentication process
+                var callbackUrl = Url.Action(
+                    "ConfirmEmail", //This is the action in the controller
+                    "Usuarios", //this is the controller
+                    new { userId = usuario.Id, userToken = userToken }, //These are the parameters the action needs
+                    protocol: HttpContext.Request.Scheme);
+
+
+                //Call the email sender service to send the email
+                await emailSender.SendEmailAsync(loginView.UserName, "Confirma tu correo electronico",
+                    $"Este mensaje es para verificar que posees un correo electrónico real. <br>" +
+                    $"Una vez lo confirmes, serás redirigido al sitio de RealRDEstate. <br>" +
+                    $"Por favor, confirma tu correo electrónico <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'> aqui</a>");
+
+                return RedirectToAction("_ConfirmEmail", "Usuarios");
+
             }
 
             else
@@ -194,18 +237,18 @@ namespace d_angela_variedades.Controllers
             var user = await userManager.FindByEmailAsync(model.Correo);
 
             //if the user is null (does not exist) or the email is not confirmed yet, return them to the login view
-            if (user == null)
+            if (user is null)
             {
                 ModelState.AddModelError("ForgotPasswordUserEmail", "Correo no encontrado");
                 return View(model);
 
             }
 
-            //if (!(await userManager.IsEmailConfirmedAsync(user)))
-            //{
-            //    ModelState.AddModelError(string.Empty, "Correo no autenticado");
-            //    return View(model);
-            //}
+            if (!(await userManager.IsEmailConfirmedAsync(user)))
+            {
+                ModelState.AddModelError(string.Empty, "Correo no autenticado");
+                return View(model);
+            }
 
             //If not, generate a token to send it to the user email
             var token = await userManager.GeneratePasswordResetTokenAsync(user);
@@ -274,6 +317,46 @@ namespace d_angela_variedades.Controllers
 
             //else, return the view
             return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult _ConfirmEmail()
+        {
+            return View();  
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string userToken)
+        {
+            //The users cannot be null
+            if (userId == null || userToken == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            //Find the user by their Id
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            //Start the confirmation process
+            var result = await userManager.ConfirmEmailAsync(user, userToken);
+
+            //If everything good, register the user and redirect them to the home page
+            if (result.Succeeded)
+            {
+                // Email confirmed successfully, you can redirect to a success page
+                //If everything went good, sign in the user, add them to the "Comprador" Roles, and redirect them to home.
+                //We use the signInManager,SignInAsync to sign in the user without a password
+                await signInManager.SignInAsync(user, isPersistent: true);
+                return RedirectToAction("Index", "Home");
+
+            }
+            
+            return View();
         }
 
         [RedirectRequired]
