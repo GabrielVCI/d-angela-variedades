@@ -5,6 +5,7 @@ using d_angela_variedades.Servicios;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -55,6 +56,11 @@ builder.Services.AddTransient<IEmpresasRepositorio, EmpresasRepositorios>();
 builder.Services.AddTransient<IUsuariosRepositorio, UsuariosRepositorio>();
 builder.Services.AddTransient<IAlmacenadorArchivos, AlmacenadorArchivosLocal>();
 builder.Services.AddTransient<IServiciosUsuarios, ServiciosUsuarios>();
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+    options.TokenLifespan = TimeSpan.FromHours(2));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -70,6 +76,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
