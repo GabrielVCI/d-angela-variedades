@@ -1,4 +1,5 @@
 ﻿using d_angela_variedades.Entidades;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,11 +12,11 @@ namespace d_angela_variedades
             
         }
 
-        DbSet<Categoria> Categorias { get; set; }   
-        DbSet<Subcategoria> Subategorias { get; set; }   
-        DbSet<Ventas> Ventas { get; set; }   
-        DbSet<Productos> Productos{ get; set; }   
-        DbSet<Empresas> Empresas{ get; set; }   
+        public DbSet<Categoria> Categorias { get; set; }   
+        public DbSet<Subcategoria> Subategorias { get; set; }   
+        public DbSet<Ventas> Ventas { get; set; }   
+        public DbSet<Productos> Productos{ get; set; }   
+        public DbSet<Empresas> Empresas{ get; set; }   
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -41,6 +42,14 @@ namespace d_angela_variedades
             builder.Entity<Productos>()
                 .HasKey(p => p.IdProducto)
                 .HasName("PrimaryKey_Producto");
+
+            builder.Entity<IdentityUser>(entity =>
+            {
+                entity.Property<string?>("LastName");
+                entity.Property<string?>("Name");
+                entity.Property<string?>("FTURL");
+                entity.Property<int>("EmpresaId");
+            });
 
         }
     }
