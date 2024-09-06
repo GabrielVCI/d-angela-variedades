@@ -1,6 +1,7 @@
 ﻿using d_angela_variedades.Entidades;
 using d_angela_variedades.Interfaces;
 using d_angela_variedades.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -36,11 +37,13 @@ namespace d_angela_variedades.Controllers
 
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Registro() 
         {
@@ -51,9 +54,6 @@ namespace d_angela_variedades.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Registro(EmpresasViewModel empresa)
         {
-
-            //Variable para asignarle el resultado del almacenamiento del logo, que tiene el tipo de la clase AlmacenadorArchivosResultado
-            var UrlFoto = new AlmacenadorArchivosResultado();
 
             if (!ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace d_angela_variedades.Controllers
             if (empresaExiste is not null)
             {
                 ModelState.AddModelError("NombreEmpresa", "Esta empresa ya existe");
-                return View(empresaExiste);
+                return View();
             }
             
             //Variable para verificar si existe un usuario con el correo que el usuario proveyó
@@ -75,7 +75,7 @@ namespace d_angela_variedades.Controllers
             if (usuarioExiste is not null)
             {
                 ModelState.AddModelError("EmailAdministrador", "Este correo ya está registrado");
-                return View(empresaExiste);
+                return View();
             }
              
             //Instanciando el nuevo usuario con la clase IdentityUser
@@ -93,13 +93,9 @@ namespace d_angela_variedades.Controllers
             //Instanciando la variable de la clase Empresas, una de las entidades del proyecto
             var nuevaEmpresa = new Empresas()
             {
-                
                 NombreEmpresa = empresa.NombreEmpresa,
                 AdminEmpresaId = nuevoUsuario.Id,
-                 
             };
-
-            
 
             //Verificando si el usuario ha agregado una foto, y validando la extensión de esta
             if (empresa.LogoEmpresa is not null)
@@ -109,7 +105,7 @@ namespace d_angela_variedades.Controllers
                 if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png")
                 {
                     ModelState.AddModelError("LogoEmpresa", "Solo se permiten fotos");
-                    return View(empresa);
+                    return View();
                 }
 
                 var logo = await SaveLogo(empresa.LogoEmpresa);
@@ -133,7 +129,49 @@ namespace d_angela_variedades.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return View(empresa);
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(LoginViewModel loginView)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(loginView);
+            }
+
+            //Buscamos algun usuario que tenga como correo el otorgado por el usuario en el login 
+
+            var usuario = await applicationDbContext.Users.FirstOrDefaultAsync(user => user.UserName == loginView.UserName);
+
+            if (usuario is null)
+            {
+                ModelState.AddModelError("UserName", "Usuario no encontrado");
+                return View(loginView);
+            }
+
+            var signInUser = await signInManager
+                .PasswordSignInAsync(loginView.UserName, loginView.Password, loginView.RememberMe, lockoutOnFailure: false);
+
+            if(signInUser.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            else
+            {
+                ModelState.AddModelError("UserName", "Nombre de usuario o contraseña incorrecta");
+                return View(loginView);
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            return RedirectToAction("Login", "Usuarios");
         }
 
         private async Task<AlmacenadorArchivosResultado> SaveLogo(IFormFile logo)

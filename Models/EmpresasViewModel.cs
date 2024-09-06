@@ -36,7 +36,7 @@ namespace d_angela_variedades.Models
 
         [EmailAddress]
         [Required(ErrorMessage = "Correo requerido")]
-        [StringLength(20, ErrorMessage = "Máximo 20 caracteres")]
+        [StringLength(40, ErrorMessage = "Máximo 20 caracteres")]
         public string EmailAdministrador { get; set; }
     }
 }
