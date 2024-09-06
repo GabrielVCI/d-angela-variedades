@@ -1,9 +1,11 @@
 ﻿using d_angela_variedades.Entidades;
 using d_angela_variedades.Interfaces;
 using d_angela_variedades.Models;
+using d_angela_variedades.Servicios;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
@@ -18,13 +20,15 @@ namespace d_angela_variedades.Controllers
         private readonly IUsuariosRepositorio usuariosRepositorio;
         private readonly IEmpresasRepositorio empresasRepositorio;
         private readonly IServiciosUsuarios serviciosUsuarios;
+        private readonly IEmailSender emailSender;
         private readonly IAlmacenadorArchivos almacenadorArchivos;
         private readonly string Logos = "LogoEmpresa";
 
 
         public UsuariosController(SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager, ApplicationDbContext applicationDbContext, IAlmacenadorArchivos almacenadorArchivos,
-            IUsuariosRepositorio usuariosRepositorio, IEmpresasRepositorio empresasRepositorio, IServiciosUsuarios serviciosUsuarios) 
+            IUsuariosRepositorio usuariosRepositorio, IEmpresasRepositorio empresasRepositorio, IServiciosUsuarios serviciosUsuarios, 
+            IEmailSender _emailSender) 
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -32,6 +36,7 @@ namespace d_angela_variedades.Controllers
             this.usuariosRepositorio = usuariosRepositorio;
             this.empresasRepositorio = empresasRepositorio;
             this.serviciosUsuarios = serviciosUsuarios;
+            emailSender = _emailSender;
             this.almacenadorArchivos = almacenadorArchivos;
         }
 
@@ -165,6 +170,131 @@ namespace d_angela_variedades.Controllers
                 return View(loginView);
             }
 
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Password()
+        {
+            return View();
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Password(ForgotPasswordViewMode model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+
+            //Otherwise, we search the usercomplete info using the email the user provided
+            var user = await userManager.FindByEmailAsync(model.Correo);
+
+            //if the user is null (does not exist) or the email is not confirmed yet, return them to the login view
+            if (user == null)
+            {
+                ModelState.AddModelError("ForgotPasswordUserEmail", "Correo no encontrado");
+                return View(model);
+
+            }
+
+            //if (!(await userManager.IsEmailConfirmedAsync(user)))
+            //{
+            //    ModelState.AddModelError(string.Empty, "Correo no autenticado");
+            //    return View(model);
+            //}
+
+            //If not, generate a token to send it to the user email
+            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+            //Create the redirect to the method we will use to actually reset the password
+            var callbackUrl = Url.Action(
+                "ResetPassword", "Usuarios",
+                new { token, user.Email }, // Just pass the parameters the method we specified needs.
+                protocol: HttpContext.Request.Scheme);
+
+            //Then use the email sender method to send the email
+            await emailSender.SendEmailAsync(
+            model.Correo,
+            "Recuperar Contraseña",
+            $"Para cambiar tu contraseña, por favor entra a este <a href='{callbackUrl}'>enlace</a>");
+
+            TempData["Redirected"] = true;
+            return RedirectToAction("PasswordChangeValidation");
+
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult ResetPassword(string token = "", string email = "")
+        {
+            if (token is null || email is null){
+                TempData["Redirected"] = true;
+                return RedirectToAction("InvalidLink");
+            }
+
+            var model = new ResetPasswordViewModel { Token = token };
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            //If the model is not valid
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Error");
+                return View(model);
+            }
+
+            //Otherwise, we find the user using the email they provided to us
+            var user = await userManager.Users.FirstOrDefaultAsync(user => user.Email == model.Email);
+
+            //If the user is null (does not exist)
+            if (user is null)
+            {
+                
+                return RedirectToAction("Login", "Usuarios");
+            }
+
+            //Otherwise, we reset the password, we do it by replace the old one with the new one
+            //using the ResetPasswordAsync Method
+            var result = await userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+
+            //If the result is succeeded, redirect the user to the confirmation reset  
+            if (result.Succeeded)
+            {
+                TempData["Redirected"] = true;
+                return RedirectToAction("ResetPasswordConfirmation");
+            }
+
+            //else, return the view
+            return View(model);
+        }
+
+        [RedirectRequired]
+        [AllowAnonymous]
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [RedirectRequired]
+        [AllowAnonymous]
+        public IActionResult PasswordChangeValidation()
+        {
+            return View();
+        }
+
+        [RedirectRequired]
+        [AllowAnonymous]
+        public IActionResult InvalidLink()
+        {
+            return View();
         }
 
         [HttpPost]

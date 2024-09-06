@@ -33,7 +33,7 @@
                                     </div>
 
                                     <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                        <a class="small">Forgot Password?</a>
+                                        <a class="small" style="cursor: pointer" asp-action="Password">Olvidé mi contraseña</a>
                                         <button type="submit" class="btn btn-primary">Ingresa</button>
                                     </div>
                                 </form>
@@ -49,3 +49,9 @@
     </div>
  
 </div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}
