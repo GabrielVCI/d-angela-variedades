@@ -1,8 +1,164 @@
-﻿@{
+﻿@model EmpresasViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@* <div class="presentation-container">
+
+    <div class="presentation">
+        <h2 class="presentation-title">@Model.NombreEmpresa</h2>
+
+        <p>Administra tu negocio con nosotros y se parte de una comunidad comprometida con el exito y la productividad.</p>
+
+        <div class="btn-presentation-container">
+            <a class="btn btn-primary">Ver productos</a>
+            <a class="btn btn-outline-light">Ver ganancias</a>
+        </div>
+    </div>
+
+
+    <div class="logo-image">
+        <img src="@Url.Content($"~/LogoEmpresa/{Model.LogoURL}")" class="foto-perfil"
+             data-image-url="@Url.Content($"~/LogoEmpresa/{Model.LogoURL}")" />
+    </div>
+
+</div>
+
+
+<div class="home-page-description-container">
+    <div class="hp-description">
+
+        <h4></h4>
+    </div>
+
+
+    <div class="hp-description">
+        <div class="description">
+            <i></i>
+            <h6></h6>
+            <p></p>
+        </div>        
+        
+        <div class="description">
+            <i></i>
+            <h6></h6>
+            <p></p>
+        </div>        
+        
+        <div class="description">
+            <i></i>
+            <h6></h6>
+            <p></p>
+        </div>        
+        
+        <div class="description">
+            <i></i>
+            <h6></h6>
+            <p></p>
+        </div>
+    </div>
+</div>
+
+
+ *@
+
+<div class="bg-dark py-5 presentation-container">
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center justify-content-center">
+            <div class="col-lg-8 col-xl-7 col-xxl-6">
+                <div class="my-5 text-center text-xl-start">
+
+                    <h1 class="display-5 fw-bolder text-white mb-2">
+                        @Model.NombreEmpresa, Administrando tu empresa como un profesional
+                    </h1>
+
+                    <p class="lead fw-normal text-white-50 mb-4">Administra tu negocio con nosotros y se parte de una comunidad comprometida con el éxito y la productividad.</p>
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+                        <a class="btn btn-primary btn-lg px-4 me-sm-3" href="#features">Ver mis productos</a>
+                        <a class="btn btn-outline-light btn-lg px-4" href="#!">Ver mis ganancias</a>
+                    </div>
+                </div>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.LogoURL))
+            {
+                <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center">
+                    <img class="img-fluid rounded-3 my-5" style="width: 600px; height: 400px;" src="@Url.Content($"~/LogoEmpresa/{Model.LogoURL}")" class="foto-perfil"
+                         data-image-url="@Url.Content($"~/LogoEmpresa/{Model.LogoURL}")" alt="..." />
+                </div>
+
+            } else{
+             <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center"><img class="img-fluid rounded-3 my-5" src="https://dummyimage.com/600x400/343a40/6c757d" alt="..." /></div>
+
+            }
+        </div>
+    </div>
+</div>
+<!-- Features section-->
+<section class="py-5" id="features">
+    <div class="container px-5 my-5">
+        <div class="row gx-5">
+            <div class="col-lg-4 mb-5 mb-lg-0"><h2 class="fw-bolder mb-0">Una mejor forma para cuidar tu negocio.</h2></div>
+            <div class="col-lg-8">
+                <div class="row gx-5 row-cols-1 row-cols-md-2">
+
+                    <div class="col mb-5 h-100">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-list-ul"></i></div>
+                        <h2 class="h5">Organiza tus productos</h2>
+                        <p class="mb-0">
+                            Servicio de organización que te ayuda a optimizar espacios, haciendo tus productos más accesibles y tu entorno más eficiente, ordenado y estético.
+                        </p>
+                    </div>
+
+                    <div class="col mb-5 h-100">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-bag-fill"></i></div>
+                        <h2 class="h5">Coordina tus ventas</h2>
+                        <p class="mb-0">
+                            Nuestro servicio coordina tus ventas para optimizar cada etapa del proceso, asegurando una gestión eficiente desde el inventario hasta la entrega.
+                        </p>
+                    </div>
+
+                    <div class="col mb-5 mb-md-0 h-100">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3">
+                            <i class="bi bi-alarm"></i>
+                         </div>
+                        <h2 class="h5">Optimiza tu tiempo</h2>
+                        <p class="mb-0">
+                            Optimiza tu tiempo al coordinar tus ventas, simplificando cada etapa del proceso y permitiéndote enfocarte en lo que realmente importa.
+                        </p>
+                    </div>
+
+                    <div class="col h-100">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-currency-dollar"></i></div>
+                        <h2 class="h5">Mejora tus finanzas</h2>
+                        <p class="mb-0">
+                            Al optimizar cada aspecto del proceso de ventas, facilitamos la mejora de tus finanzas, ayudándote a maximizar tus ganancias y fortalecer tu negocio.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Testimonial section-->
+<div class="py-5 bg-light">
+    <div class="container px-5 my-5">
+        <div class="row gx-5 justify-content-center">
+            <div class="col-lg-10 col-xl-7">
+                <div class="text-center">
+                    <div class="fs-4 mb-4 fst-italic">
+                        "Emprender es un viaje lleno de retos, pero con fe en Dios y perseverancia, cada obstáculo te acerca a los sueños que Él ha puesto en tu corazón. Confía en Su guía, porque con pasión y Su bendición, todo es posible."
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="fw-bold">
+                            Para ti
+                            <span class="fw-bold text-primary mx-1">/</span>
+                            De mi parte
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
