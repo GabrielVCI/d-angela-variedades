@@ -2,6 +2,7 @@
 using d_angela_variedades.Interfaces;
 using d_angela_variedades.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace d_angela_variedades.Repositorio
 {
@@ -44,6 +45,26 @@ namespace d_angela_variedades.Repositorio
         public Task ObtenerIdUsuario()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<string> ObtenerNombreUsuario(string usuarioId)
+        {
+            var usuario = await applicationDbContext.Users
+                .Where(u => u.Id == usuarioId)
+                .Select(u => new
+                {
+                    u.UserName,
+                    Name = EF.Property<string>(u, "Name"),
+                    
+                })
+                .FirstOrDefaultAsync();
+
+            if(usuario is null)
+            {
+                return "";
+            }
+
+            return usuario.Name;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using d_angela_variedades.Entidades;
+using System.ComponentModel.DataAnnotations;
 
 namespace d_angela_variedades.Models
 {
@@ -38,5 +39,7 @@ namespace d_angela_variedades.Models
         [Required(ErrorMessage = "Correo requerido")]
         [StringLength(40, ErrorMessage = "Máximo 20 caracteres")]
         public string EmailAdministrador { get; set; }
+
+        public string? LogoURL { get; set; }
     }
 }

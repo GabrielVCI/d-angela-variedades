@@ -12,6 +12,7 @@ namespace d_angela_variedades.Servicios
         {
             this.httpContext = httpContextAccessor.HttpContext;
         }
+         
         public string ObtenerUsuarioId()
         {
             if (httpContext.User.Identity.IsAuthenticated) //Si esta autenticado
