@@ -1,4 +1,5 @@
-﻿using d_angela_variedades.Models;
+﻿using d_angela_variedades.Entidades;
+using d_angela_variedades.Models;
 
 namespace d_angela_variedades.Interfaces
 {
@@ -7,5 +8,8 @@ namespace d_angela_variedades.Interfaces
         Task<bool> Guardar();
 
         Task<bool> AgregarEmpresa(EmpresasViewModel empresas, string AdminId);
+
+        Task<Empresas> ObtenerEmpresa(string usuarioId);
+        Task<string> ObtenerLogoURLEmpresa(int empresaId);
     }
 }

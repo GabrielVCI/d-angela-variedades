@@ -1,12 +1,22 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using d_angela_variedades.Interfaces
 @inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject IUsuariosRepositorio usuarioRepositorio
 
 <ul class="navbar-nav">
 
     @if (SignInManager.IsSignedIn(User))
     {
+        var userId = UserManager.GetUserId(User);
+
+        var userTask = usuarioRepositorio.ObtenerNombreUsuario(userId);
+        userTask.Wait();
+
+        var user = userTask.Result; 
+ 
         <li class="nav-item">
-            <span class="nav-link text-dark">Hola, @User.Identity.Name</span>
+            <span class="nav-link text-dark">Hola, @user</span>
         </li>
         <li class="nav-item">
             <form class="form-inline" asp-action="logout" asp-controller="usuarios">
