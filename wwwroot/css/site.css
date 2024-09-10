@@ -51,3 +51,15 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+.card {
+    transition: transform 0.3s ease;
+}
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+.list-group-item:hover {
+    background-color: #f0f0f0;
+}
