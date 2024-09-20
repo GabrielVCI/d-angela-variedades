@@ -1,4 +1,8 @@
-﻿<header class="bg-dark py-5">
+﻿
+@{
+    ViewData["Title"] = "Productos";
+}
+<header class="bg-dark py-5">
     <div class="container px-5">
         <div class="row gx-5 justify-content-center">
             <div class="col-lg-6">
@@ -6,10 +10,11 @@
                     <h1 class="display-5 fw-bolder text-white mb-2">Administrar mis productos</h1>
                     <p class="lead text-white-50 mb-4">
 
-Este apartado es para que registres los productos de tu negocio, de una forma ordenada, diviendolos en categorias y subcategorias para una facil clasificacion.                        </p>
+                    Este apartado es para que registres los productos de tu negocio, 
+                    de una forma ordenada, diviéndolos en categorías y subcategorías para una fácil clasificación.                        </p>
                     <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
-                        <a class="btn btn-primary btn-lg px-4 me-sm-3" href="#features">Agregar Producto</a>
-                        <a class="btn btn-outline-light btn-lg px-4" href="#!">Crear Categoria</a>
+                        <button class="btn btn-primary btn-lg px-4 me-sm-3" >Agregar Producto</button>
+                        <button class="btn btn-outline-light btn-lg px-4" onclick="agregarNuevaCategoria()">Crear Categoría</button>
                     </div>
                 </div>
             </div>
@@ -23,89 +28,305 @@ Este apartado es para que registres los productos de tu negocio, de una forma or
         <div class="my-3">
             <h5 class="display-6 fw-bolder">Mis Categorias</h5>
         </div>
-        <div class="row"> 
-            <div class="col-lg-12 justify-content-center accordion" id="accordionExample">
-  
-                        <div class="accordion-item">
-                          <div class="d-flex row">
-                              <div class="col-lg-10">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button border" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                            Cosmeticos
+        <div class="row">
+
+            <div class="col-lg-12 justify-content-center accordion" id="contenedor-listado-categorias">
+                <div class="categorias-funcionalities">
+                    <div data-bind="visible: cargando" class="spinner-border">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+
+                    <div data-bind="visible: noHayCategorias">
+                        <p>No tienes categorías registradas.</p>
+                    </div>
+                </div>
+                <div class="" data-bind="foreach: categorias">
+                    <div class="accordion-item">
+                        <div class="d-flex row">
+                            <div class="col-lg-9">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button border" type="button" style="height: 60px" data-bs-toggle="collapse" data-bind="attr: { 'data-bs-target': '#accordeon' + codigo }" aria-expanded="true" >
+                                        <p style="font-weight: bold" data-bind="text: nombre"></p>
+                                    </button>
+                                </h2>
+                            </div>
+
+                            <div class="col-lg-3 d-flex justify-content-around align-items-center">
+                                <button class="btn btn-primary w-40">
+                                    <i class="bi bi-list"></i>
+                                </button>
+                                <button class="btn btn-secondary  w-40">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-danger   w-40">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div data-bind="attr: { id: 'accordeon' + codigo }" class="accordion-collapse collapse show" data-bs-parent="#contenedor-listado-categorias">
+
+                            <div class="accordion-body" data-bind="foreach: subcategorias">
+@*                                 <div class="border m-2 p-3">
+                                    <h6 data-bind="text: NombreSubcategoria"></h6>
+                                    <p>
+                                        Productos de <span data-bind="text: NombreSubcategoria"></span>: <span data-bind="text: CantidadProductos"></span>
+                                    </p>
+
+                                    <div class="">
+                                        <button class="btn btn-primary">
+                                            <i class="bi bi-card-checklist"></i>
                                         </button>
-                                    </h2>
-                              </div>
-
-                              <div class="col-lg-2">
-                                    <button class="btn btn-primary w-25 h-100">
-                                        <i class="bi bi-list"></i>
-                                    </button>
-                                    <button class="btn btn-secondary  w-25 h-100">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="btn btn-danger   w-25 h-100">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                              </div>
-                           </div>
-                            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-
-                                    <div class="border m-2 p-3">
-                                        <h6>Cyzone</h6>
-                                        <p>Productos de Cyzone: 7</p>
-
-                                        <div class="">
-                                            <button class="btn btn-primary">
-                                                <i class="bi bi-card-checklist"></i>
-                                            </button>
-                                            <button class="btn btn-secondary">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-danger">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="border m-2 p-3">
-                                        <h6>Esika</h6>
-                                        <p>Productos de Esika: 7</p>
-
-                                        <div class="">
-                                            <button class="btn btn-primary">
-                                                <i class="bi bi-card-checklist"></i>
-                                            </button>
-                                            <button class="btn btn-secondary">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-danger">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="border m-2 p-3">
-                                        <h6>L'BEL</h6>
-                                        <p>Productos de L'BEL: 7</p>
-
-                                        <div class="">
-                                            <button class="btn btn-primary">
-                                                <i class="bi bi-card-checklist"></i>
-                                            </button>
-                                            <button class="btn btn-secondary">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-danger">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
+                                        <button class="btn btn-secondary">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
                                     </div>
                                 </div>
+
+                                                             <div class="border m-2 p-3">
+                                <h6>Esika</h6>
+                                <p>Productos de Esika: 7</p>
+
+                                <div class="">
+                                <button class="btn btn-primary">
+                                <i class="bi bi-card-checklist"></i>
+                                </button>
+                                <button class="btn btn-secondary">
+                                <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-danger">
+                                <i class="bi bi-trash"></i>
+                                </button>
+                                </div>
+                                </div>  
+
+                                                                <div class="border m-2 p-3">
+                                <h6>L'BEL</h6>
+                                <p>Productos de L'BEL: 7</p>
+
+                                <div class="">
+                                <button class="btn btn-primary">
+                                <i class="bi bi-card-checklist"></i>
+                                </button>
+                                <button class="btn btn-secondary">
+                                <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-danger">
+                                <i class="bi bi-trash"></i>
+                                </button>
+                                </div>
+                                </div> *@
+                            </div>
+                            <div class="container mb-4">
+                                <button class="btn btn-outline-dark">
+                                    Agregar Subcategoría
+                                </button>
                             </div>
                         </div>
                     </div> 
-                </div> 
-            </div> 
-        </div>
 
+                    <div class="form-container">
+                        <div class="hidden" id="overlay" data-bind="visible: esNuevo"></div>
+
+                        <section class="hidden" id="modal-design" data-bind="visible: esNuevo">
+
+                            <div class="flex">
+                                <h3 class="fw-bold">Crear una categoria</h3>
+                                <button class="btn btn-close" data-bind="click: focusOutCategoria"></button>
+                            </div>
+
+                            <form data-bind="submit: manejarSubmitCategoria">
+
+                                <div class="mb-3">
+                                    <label for="NombreCategoria" class="form-label">Nombre de la categoria</label>
+                                    <input type="text"
+                                           data-bind="value: nombre, event: { input: enforceMaxLength }"
+                                           class="form-control"
+                                           id="nombre">
+                                    <div><span data-bind="text: charCountNombreCategoria"></span>/20</div> 
+                                    <div class="error text-danger" data-bind="validationMessage: nombre"></div>
+                                </div>
+
+
+                                <div class="form-agregar-categoria">
+                                    <button class="btn btn-primary" type="submit" data-bind="disable: enviandoCategoria">
+                                        Crear Categoria
+                                    </button>
+
+                                    <a class="btn btn-secondary" data-bind="click: focusOutCategoria">
+                                        Cancelar
+                                    </a>
+                                </div>
+
+                            </form> 
+                        </section>
+                    </div> 
+ 
+                </div>
+
+@*                 <div class="form-container">
+                    <div class="hidden" id="overlay" data-bind="visible: esNuevo"></div>
+
+                    <section class="hidden" id="modal-design" data-bind="visible: esNuevo">
+
+                        <div class="flex">
+                            <h3 class="fw-bold">Crear una categoria</h3>
+                            <button class="btn btn-close" data-bind="click: focusOutPropiedad">⨉</button>
+                        </div>
+
+                        <form data-bind="submit: manejarSubmitCategoria">
+
+                            <div class="mb-3">
+                                <label for="NombreCategoria" class="form-label">Nombre de la categoria</label>
+                                <input type="text"
+                                       data-bind="value: NombreCategoria, event: { input: enforceMaxLength }"
+                                       class="form-control"
+                                       id="NombreCategoria">
+                                <div><span data-bind="text: charCountNombreCategoria"></span>/20</div>
+
+                                <div class="error text-danger" data-bind="validationMessage: NombreCategoria"></div>
+
+                            </div>
+
+
+                            <div class="form-agregar-categoria">
+                                <button class="btn-agregar" type="submit" data-bind="disable: enviandoCategoria">
+                                    Crear Categoria
+                                </button>
+
+                                <button class="btn-cancelar-agregar" data-bind="click: focusOutPropiedad">
+                                    Cancelar
+                                </button>
+                            </div>
+
+                        </form>
+
+                    </section>
+        </div> *@ 
+            </div>
+        </div> 
+    </div> 
+</div>
+    
+ 
+ 
+ 
+@section Scripts{
+
+    <script src="~/js/categorias.js"></script>
+    <script src="~/js/utilidades.js"></script>
+
+    <script>
+
+        const urlCategorias = "/api/categorias";
+        //Validaciones para los campos vacios y los mensajes de error
+        ko.validation.init({
+            insertMessages: false,  // Avoid inserting automatic messages
+            decorateInputElement: true,
+            errorElementClass: 'error'
+        }, true);
+
+        //Validation and format for the price of the format. (1,000, 10,000, etc.)
+        //Formato de los precios despues de los miles
+        ko.bindingHandlers.currency = {
+            update: function (element, valueAccessor) {
+                var value = ko.unwrap(valueAccessor());
+                var formattedValue = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                element.value = formattedValue;
+            }
+        };
+
+        //This is the function we use to bind the data in the view and list it.
+        //Funcion utilizada para relacionar los datos
+        function ListadoCategoriasViewModelFn() {
+            var self = this;
+            self.categorias = ko.observableArray([]);
+            self.cargando = ko.observable(true);
+ 
+            self.noHayCategorias = ko.pureComputed(function () {
+                if (self.cargando()) {
+                    return false;
+                }
+                return self.categorias().length === 0;
+            });
+        }
+
+        //This function is use to get each element to push it into the list. We pass all the properties
+        //of one property
+        function categoriaElementoListadoViewModel
+            ({ idCategoria, nombre, subcategorias }) {
+                 
+            var self = this;
+            self.codigo = idCategoria;
+            let maxLengthNombreCategoria = 20;
+            self.idCategoria = ko.observable(idCategoria);
+
+            self.nombre = ko.observable(nombre).extend({
+                required: {
+                    message: "Este campo es requerido"
+                }
+            });
+
+            self.subcategorias = ko.observableArray([]);
+             
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input DESCRIPTION
+            self.charCountNombreCategoria = ko.pureComputed(function () {
+
+                if (self.nombre() === undefined) {
+                    return '0';
+                }
+                if (self.nombre() != undefined) {
+                    return self.nombre().length;
+                }
+            });
+               
+            self.esNuevo = ko.pureComputed(function () {
+                return self.idCategoria() == 0;
+            });
+                  
+            self.enforceMaxLength = function (data, event) {
+                var input = event.target.value;
+                if (input.length > maxLengthNombreCategoria) {
+                    event.target.value = input.substring(0, maxLengthNombreCategoria);
+                    self.nombre(input.substring(0, maxLengthNombreCategoria));
+                } else {
+                    self.nombre(input);
+                }
+            };
+
+            self.enviandoCategoria = ko.observable(false);
+
+  
+            self.manejarSubmitCategoria = async function () {
+                var errors = ko.validation.group(self);
+
+                if (errors().length > 0) {
+                    errors.showAllMessages();
+                    this.enviandoCategoria(false);
+                    return;
+                }
+
+                //If the submit button is pressed, enviandoPropiedad is true and the button will be disabled
+                if (this.enviandoCategoria()) {
+                    return;
+                }
+
+                this.enviandoCategoria(true);
+
+                const categoria = {
+                    id: self.idCategoria,
+                    nombre: self.nombre,
+                }
+
+                await guardarCategoria(categoria);
+            }
+        }
+
+        const categoriasListadoViewModel = new ListadoCategoriasViewModelFn();
+
+        ko.applyBindings(categoriasListadoViewModel, document.getElementById('contenedor-listado-categorias'));
+        ObtenerListadoCategorias()
+    </script>
+}
