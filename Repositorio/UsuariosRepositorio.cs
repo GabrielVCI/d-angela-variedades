@@ -18,11 +18,8 @@ namespace d_angela_variedades.Repositorio
         }
         public async Task<bool> Guardar()
         {
-            var save = await applicationDbContext.SaveChangesAsync();
-            
-            return save > 0? true: false;
-           
-
+            var save = await applicationDbContext.SaveChangesAsync(); 
+            return save > 0? true: false; 
         }
 
         public async Task<bool> GuardarNuevoUsuario(EmpresasViewModel empresa, string EmpresaId)
@@ -65,6 +62,22 @@ namespace d_angela_variedades.Repositorio
             }
 
             return usuario.Name;
+        }
+
+        public async Task<int> ObtenerEmpresaUsuario(string usuarioId)
+        {
+            var usuario = await applicationDbContext.Users.Where(user => user.Id == usuarioId).Select(user => new
+            {
+                user.Id,
+                EmpresaId = EF.Property<int>(user, "EmpresaId")
+            }).FirstOrDefaultAsync();
+
+            if(usuario is null)
+            {
+                return -1;
+            }
+
+            return usuario.EmpresaId;
         }
     }
 }

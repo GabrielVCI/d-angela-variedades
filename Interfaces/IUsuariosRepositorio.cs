@@ -8,6 +8,7 @@ namespace d_angela_variedades.Interfaces
         Task<bool> GuardarNuevoUsuario(EmpresasViewModel empresa, string EmpresaId);
         Task<bool> Guardar();
         Task<string> ObtenerNombreUsuario(string usuarioId);
+        Task<int> ObtenerEmpresaUsuario(string usuarioId);
 
     }
 }
