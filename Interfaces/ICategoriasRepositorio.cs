@@ -1,4 +1,5 @@
-﻿using d_angela_variedades.Entidades;
+﻿using d_angela_variedades.Data;
+using d_angela_variedades.Entidades;
 
 namespace d_angela_variedades.Interfaces
 {
@@ -7,5 +8,7 @@ namespace d_angela_variedades.Interfaces
         Task<List<Categoria>> ListadoDeCategorias(int empresaUsuarioId);
         Task<Categoria> AgregarCategoria(Categoria nombreCategoria, int empresaUsuarioId);
         Task<bool> Save();
+        Task<Categoria> ObtenerCategoria(int categoriaId, int empresaCategoriaId);
+        Task<bool> EditarCategoria(CategoriaEditarDTO categoria, int categoriaId, int empresaUsuarioId);
     }
 }

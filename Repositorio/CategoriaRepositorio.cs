@@ -1,4 +1,5 @@
-﻿using d_angela_variedades.Entidades;
+﻿using d_angela_variedades.Data;
+using d_angela_variedades.Entidades;
 using d_angela_variedades.Interfaces;
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.EntityFrameworkCore;
@@ -31,11 +32,31 @@ namespace d_angela_variedades.Repositorio
             return nuevaCategoria;
         }
 
+        public async Task<bool> EditarCategoria(CategoriaEditarDTO categoria, int categoriaId, int empresaUsuarioId)
+        {
+            var categoriaAEditar = await context.Categorias
+                .Where(cat => cat.IdCategoria ==  categoriaId && empresaUsuarioId == cat.EmpresaId).FirstOrDefaultAsync();
+
+            categoriaAEditar.Nombre = categoria.Nombre;
+
+            context.Update(categoriaAEditar);
+
+            return await Save();
+        }
+
         public async Task<List<Categoria>> ListadoDeCategorias(int empresaUsuarioId)
         {
 
             var categorias = await context.Categorias.Where(cat => cat.EmpresaId == empresaUsuarioId).ToListAsync();
             return categorias;
+        }
+
+        public async Task<Categoria> ObtenerCategoria(int categoriaId, int empresaCategoriaId)
+        {
+            var categoria = await context.Categorias
+                .Where(cat => cat.IdCategoria ==  categoriaId && cat.EmpresaId == empresaCategoriaId).FirstOrDefaultAsync();
+
+            return categoria;
         }
 
         public async Task<bool> Save()
