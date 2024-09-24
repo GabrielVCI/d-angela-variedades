@@ -55,14 +55,15 @@
                                 <button class="btn btn-primary w-40">
                                     <i class="bi bi-list"></i>
                                 </button>
-                                <button class="btn btn-secondary  w-40">
+                                <button data-bind="click: ObtenerCategoriaParaEditar" class="btn btn-secondary w-40">
                                     <i class="bi bi-pencil"></i>
                                 </button>
-                                <button class="btn btn-danger   w-40">
+                                <button class="btn btn-danger w-40">
+                                    
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </div>
-                        </div>
+                        </div> 
                         <div data-bind="attr: { id: 'accordeon' + codigo }" class="accordion-collapse collapse show" data-bs-parent="#contenedor-listado-categorias">
 
                             <div class="accordion-body" data-bind="foreach: subcategorias">
@@ -71,7 +72,6 @@
                                     <p>
                                         Productos de <span data-bind="text: NombreSubcategoria"></span>: <span data-bind="text: CantidadProductos"></span>
                                     </p>
-
                                     <div class="">
                                         <button class="btn btn-primary">
                                             <i class="bi bi-card-checklist"></i>
@@ -210,6 +210,7 @@
     </div> 
 </div>
     
+<partial name="_ModalEditarCategoria" />
  
  
  
@@ -237,6 +238,9 @@
                 element.value = formattedValue;
             }
         };
+
+        const modalEditarCategoria = document.getElementById('editar-categoria');
+        const modalEditarCategoriaBTSP = new bootstrap.Modal(modalEditarCategoria);
 
         //This is the function we use to bind the data in the view and list it.
         //Funcion utilizada para relacionar los datos
@@ -298,7 +302,6 @@
 
             self.enviandoCategoria = ko.observable(false);
 
-  
             self.manejarSubmitCategoria = async function () {
                 var errors = ko.validation.group(self);
 
@@ -324,9 +327,61 @@
             }
         }
 
+        const categoriaEditarViewModel = {
+
+            id: 0,
+            nombre: ko.observable('').extend({ required: { message: "Este campo es requerido" } }),
+
+            maxLengthNombreCategoria: 20,
+
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input DESCRIPTION
+            charCountNombreCategoria: ko.pureComputed(function () {
+                return categoriaEditarViewModel.nombre() ? categoriaEditarViewModel.nombre().length : '0';
+            }),
+
+            enforceMaxLength: function (data, event) {
+                var input = event.target.value;
+                if (input.length > categoriaEditarViewModel.maxLengthNombreCategoria) {
+                    event.target.value = input.substring(0, categoriaEditarViewModel.maxLengthNombreCategoria);
+                    categoriaEditarViewModel.nombre(input.substring(0, categoriaEditarViewModel.maxLengthNombreCategoria));
+                } else {
+                    categoriaEditarViewModel.nombre(input);
+                }
+            },
+
+            //variable to verify if the guardar button has been pressed
+            haSidoPresionado: ko.observable(false),
+
+            manejarSubmitEditarCategoria: async function () {
+
+                var errors = ko.validation.group(this)
+
+                if (errors().length > 0) {
+                    errors.showAllMessages();
+                    this.haSidoPresionado(false);
+                    return;
+                }
+
+                if (this.haSidoPresionado()) {
+                    return;
+                }
+
+                this.haSidoPresionado(true);
+
+                const categoriaEditada = {
+                    Id: this.id,
+                    Nombre: this.nombre()
+                }
+
+                await enviarCategoriaAlBackEnd(categoriaEditada);
+                this.haSidoPresionado(false);
+            }
+        }
+
         const categoriasListadoViewModel = new ListadoCategoriasViewModelFn();
 
         ko.applyBindings(categoriasListadoViewModel, document.getElementById('contenedor-listado-categorias'));
+        ko.applyBindings(categoriaEditarViewModel, document.getElementById('editar-categoria'));
         ObtenerListadoCategorias()
     </script>
 }

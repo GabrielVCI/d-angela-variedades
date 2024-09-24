@@ -32,3 +32,57 @@ function MensajeDeExito(mensaje) {
         icon: "success"
     });
 }
+
+function confirmarActionEditar({ callbackAceptar, callbackCancelar, titulo, mensaje }) {
+
+    Swal.fire({
+        title: titulo || '¿Realmente deseas hacer esto?',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'Si',
+        focusConfirm: true,
+        text: mensaje
+    }).then((resultado) => {
+        if (resultado.isConfirmed) {
+            callbackAceptar();
+        }
+        else if (callbackCancelar) {
+            callbackCancelar();
+        }
+    });
+}
+
+function mensajeExitoAccionCompletada(mensaje) {
+    Swal.fire({
+        title: "Listo",
+        text: mensaje,
+        icon: "success"
+    });
+}
+
+
+function completandoAccionTimer() {
+    let timerInterval;
+    Swal.fire({
+        title: "Cargando..",
+        html: "Completado en <b></b>",
+        timer: 1000,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+            const b = document.createElement('b');
+            const htmlContainer = Swal.getHtmlContainer();
+            htmlContainer.appendChild(b);
+            timerInterval = setInterval(() => {
+                b.textContent = `${Swal.getTimerLeft()}`;
+            }, 100);
+        },
+        willClose: () => {
+            clearInterval(timerInterval);
+        }
+    }).then((result) => {
+        if (result.dismiss === Swal.DismissReason.timer) {
+            return;
+        }
+    });
+}

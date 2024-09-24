@@ -1,4 +1,5 @@
-﻿using d_angela_variedades.Entidades;
+﻿using d_angela_variedades.Data;
+using d_angela_variedades.Entidades;
 using d_angela_variedades.Interfaces;
 using d_angela_variedades.Repositorio;
 using Microsoft.AspNetCore.Mvc;
@@ -26,11 +27,34 @@ namespace d_angela_variedades.API
         {
             var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
 
-            var empresaUsuarioId = await usuariosRepositorio.ObtenerEmpresaUsuario(usuarioId);
+            var empresaUsuarioId = await usuariosRepositorio.ObtenerEmpresaUsuarioId(usuarioId);
 
             var listadoCategorias = await categoriaRepositorio.ListadoDeCategorias(empresaUsuarioId);
 
             return listadoCategorias;
+        }
+
+        [HttpGet("{categoriaId:int}")]
+        public async Task<ActionResult<Categoria>> Get(int categoriaId)
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+
+            var empresaUsuarioId = await usuariosRepositorio.ObtenerEmpresaUsuarioId(usuarioId);
+
+            if(categoriaId is 0)
+            {
+                ModelState.AddModelError("", "Error al intentar editar la categoria");
+                return StatusCode(400, ModelState);
+            }
+
+            var categoria = await categoriaRepositorio.ObtenerCategoria(categoriaId, empresaUsuarioId);
+
+            if (categoria is null) 
+            {
+                return NotFound();
+            }
+
+            return categoria;
         }
 
         [HttpPost]
@@ -40,7 +64,6 @@ namespace d_angela_variedades.API
 
             if (!ModelState.IsValid)
             {
-                Console.WriteLine("aja");
                 return BadRequest(ModelState);
             }
 
@@ -49,7 +72,7 @@ namespace d_angela_variedades.API
                 return BadRequest();
             }
 
-            var empresaUsuarioId = await usuariosRepositorio.ObtenerEmpresaUsuario(usuarioId);
+            var empresaUsuarioId = await usuariosRepositorio.ObtenerEmpresaUsuarioId(usuarioId);
 
             var nuevaCategoria = await categoriaRepositorio.AgregarCategoria(nombreCategoria, empresaUsuarioId);
 
@@ -59,6 +82,36 @@ namespace d_angela_variedades.API
             }
 
             return Ok(nuevaCategoria);
+        }
+
+        [HttpPut("{categoriaId:int}")]
+        public async Task<ActionResult<Categoria>> Put([FromBody] CategoriaEditarDTO categoria, int categoriaId)
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();  
+
+            var empresaUsuarioId = await usuariosRepositorio.ObtenerEmpresaUsuarioId(usuarioId);
+
+            if(empresaUsuarioId is 0)
+            {
+                ModelState.AddModelError("", "Esta categoria no pertenece a la empresa");
+                return StatusCode(403, ModelState);
+            }
+
+            if(categoria is null)
+            {
+                ModelState.AddModelError("", "Error al editar la categoria");
+                return StatusCode(400, ModelState);
+            }
+
+            var categoriaEditada = await categoriaRepositorio.EditarCategoria(categoria, categoriaId, empresaUsuarioId);
+
+            if (!categoriaEditada)
+            {
+                ModelState.AddModelError("", "Error en el servidor");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok(categoriaEditada);
         }
     }
 }

@@ -64,7 +64,7 @@ namespace d_angela_variedades.Repositorio
             return usuario.Name;
         }
 
-        public async Task<int> ObtenerEmpresaUsuario(string usuarioId)
+        public async Task<int> ObtenerEmpresaUsuarioId(string usuarioId)
         {
             var usuario = await applicationDbContext.Users.Where(user => user.Id == usuarioId).Select(user => new
             {
