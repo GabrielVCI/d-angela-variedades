@@ -44,6 +44,15 @@ namespace d_angela_variedades.Repositorio
             return await Save();
         }
 
+        public async Task<bool> EliminarCategoria(int empresaUsuarioId, int categoriaId)
+        {
+            var categoria = await context.Categorias.Where(cat => cat.IdCategoria == categoriaId && cat.EmpresaId == empresaUsuarioId).FirstOrDefaultAsync();
+            
+            context.Remove(categoria);
+
+            return await Save();
+        }
+
         public async Task<List<Categoria>> ListadoDeCategorias(int empresaUsuarioId)
         {
 

@@ -133,3 +133,39 @@ async function ObtenerCategoriaParaEditar(categoria) {
 }
 
 
+async function eliminarCategoria(categoria) {
+
+    completandoAccionTimer();
+ 
+    const response = await fetch(`${urlCategorias}/${categoria.idCategoria()}`, {
+        method: 'DELETE'
+    });
+
+    if (!response.ok) {
+        manejarErrorApi(response);
+        return;
+    }
+    
+    categoriasListadoViewModel.categorias.remove(function (cat) { return cat.id == categoria.idCategoria });
+    MensajeDeExito();
+    ObtenerListadoCategorias();
+
+}
+
+function confirmarElimininacionCategoria(categoria) {
+
+    confirmarAction({
+        callbackAceptar: () => {
+            eliminarCategoria(categoria);
+        },
+        callbackCancelar: () => {
+            return;
+        },
+
+        titulo: '¿Desea borrar esta categoría?',
+
+        text: "Se eliminará de su lista de categorías"
+    });
+}
+
+

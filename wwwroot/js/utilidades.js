@@ -33,7 +33,7 @@ function MensajeDeExito(mensaje) {
     });
 }
 
-function confirmarActionEditar({ callbackAceptar, callbackCancelar, titulo, mensaje }) {
+function confirmarAction({ callbackAceptar, callbackCancelar, titulo, mensaje }) {
 
     Swal.fire({
         title: titulo || '¿Realmente deseas hacer esto?',

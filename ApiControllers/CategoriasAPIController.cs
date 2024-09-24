@@ -113,5 +113,27 @@ namespace d_angela_variedades.API
 
             return Ok(categoriaEditada);
         }
+
+        [HttpDelete("{categoriaId:int}")]
+        public async Task<ActionResult<Categoria>> Delete(int categoriaId)
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+
+            var empresaUsuarioId = await usuariosRepositorio.ObtenerEmpresaUsuarioId(usuarioId);
+
+            if(empresaUsuarioId is 0)
+            {
+                return StatusCode(400, "Esta categoría no pertenece a esta empresa.");
+            }
+
+            var categoria = await categoriaRepositorio.EliminarCategoria(empresaUsuarioId, categoriaId);
+
+            if (!categoria)
+            {
+                return StatusCode(500, "Error al eliminar la categoria");
+            }
+
+            return Ok();
+        }
     }
 }
