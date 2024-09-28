@@ -84,6 +84,7 @@ namespace d_angela_variedades.API
             return Ok(nuevaCategoria);
         }
 
+
         [HttpPut("{categoriaId:int}")]
         public async Task<ActionResult<Categoria>> Put([FromBody] CategoriaEditarDTO categoria, int categoriaId)
         {

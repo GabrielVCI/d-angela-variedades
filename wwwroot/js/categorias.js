@@ -5,10 +5,12 @@ function agregarNuevaCategoria() {
         new categoriaElementoListadoViewModel(
             { idCategoria: 0, NombreCategoria: '', Subcategorias: '' }));
 
+    
 }; 
 
 async function guardarCategoria(categoria) {
-
+     
+     
     try {
         const nombreCategoria = categoria.nombre();
 
@@ -59,7 +61,7 @@ async function ObtenerListadoCategorias() {
 
     const json = await respuesta.json();
     categoriasListadoViewModel.categorias([]);
- 
+
     json.forEach(categoria => {
         const viewModel = new categoriaElementoListadoViewModel(categoria);
         categoriasListadoViewModel.categorias.push(viewModel);
@@ -167,5 +169,7 @@ function confirmarElimininacionCategoria(categoria) {
         text: "Se eliminará de su lista de categorías"
     });
 }
+
+
 
 

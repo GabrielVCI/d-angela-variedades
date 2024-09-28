@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace d_angela_variedades
 {
@@ -50,6 +51,11 @@ namespace d_angela_variedades
                 entity.Property<string?>("FTURL");
                 entity.Property<int>("EmpresaId");
             });
+
+            builder.Entity<Categoria>()
+                    .HasMany(c => c.Subcategorias)
+                    .WithOne(s => s.Categoria)
+                    .HasForeignKey(s => s.IdCategoria);
 
         }
     }

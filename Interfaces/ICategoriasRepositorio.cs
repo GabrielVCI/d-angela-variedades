@@ -11,5 +11,7 @@ namespace d_angela_variedades.Interfaces
         Task<Categoria> ObtenerCategoria(int categoriaId, int empresaCategoriaId);
         Task<bool> EditarCategoria(CategoriaEditarDTO categoria, int categoriaId, int empresaUsuarioId);
         Task<bool> EliminarCategoria(int empresaUsuarioId, int categoriaId);
+        Task<bool> CategoriaExiste(int categoriaId);
+        Task<bool> CategoriaPerteneceAlaEmpresa(int empresaId, int categoriaId);
     }
 }

@@ -32,6 +32,19 @@ namespace d_angela_variedades.Repositorio
             return nuevaCategoria;
         }
 
+        public async Task<bool> CategoriaExiste(int categoriaId)
+        {
+            var categoria = await context.Categorias.AnyAsync(cat => cat.IdCategoria == categoriaId);
+
+            return categoria;
+        }
+
+        public async Task<bool> CategoriaPerteneceAlaEmpresa(int empresaId, int categoriaId)
+        {
+            var categoriaPerteneceAlaEmpresa = await context.Categorias.AnyAsync(cat => cat.EmpresaId == empresaId && cat.IdCategoria == categoriaId);   
+            return categoriaPerteneceAlaEmpresa;
+        }
+
         public async Task<bool> EditarCategoria(CategoriaEditarDTO categoria, int categoriaId, int empresaUsuarioId)
         {
             var categoriaAEditar = await context.Categorias
@@ -55,8 +68,10 @@ namespace d_angela_variedades.Repositorio
 
         public async Task<List<Categoria>> ListadoDeCategorias(int empresaUsuarioId)
         {
-
-            var categorias = await context.Categorias.Where(cat => cat.EmpresaId == empresaUsuarioId).ToListAsync();
+            var categorias = await context.Categorias
+                .Include(cat => cat.Subcategorias)
+                .Where(cat => cat.EmpresaId == empresaUsuarioId)
+                .ToListAsync();
             return categorias;
         }
 

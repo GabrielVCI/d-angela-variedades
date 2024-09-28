@@ -41,6 +41,7 @@
                     </div>
                 </div>
                 <div class="" data-bind="foreach: categorias">
+
                     <div class="accordion-item">
                         <div class="d-flex row">
                             <div class="col-lg-9">
@@ -64,13 +65,21 @@
                             </div>
                         </div> 
                         <div data-bind="attr: { id: 'accordeon' + codigo }" class="accordion-collapse collapse show" data-bs-parent="#contenedor-listado-categorias">
+                            <div class="container mt-4">
+                                <button data-bind="{click: AgregarSubcategoria}" class="btn btn-outline-dark">
+                                    Agregar Subcategoría
+                                </button>
+                            </div>
+                            <div class="accordion-body row" data-bind="foreach: subcategorias">
 
-                            <div class="accordion-body" data-bind="foreach: subcategorias">
-@*                                 <div class="border m-2 p-3">
-                                    <h6 data-bind="text: NombreSubcategoria"></h6>
+                                <div class="border m-2 p-3 col-3 subcategoria-card" >
+                                    <h6 data-bind="text: name"></h6>
+
                                     <p>
-                                        Productos de <span data-bind="text: NombreSubcategoria"></span>: <span data-bind="text: CantidadProductos"></span>
+                                        Productos de <span data-bind="text: name">
+                                        </span>: <span>3</span>
                                     </p>
+
                                     <div class="">
                                         <button class="btn btn-primary">
                                             <i class="bi bi-card-checklist"></i>
@@ -83,63 +92,26 @@
                                         </button>
                                     </div>
                                 </div>
-
-                                                             <div class="border m-2 p-3">
-                                <h6>Esika</h6>
-                                <p>Productos de Esika: 7</p>
-
-                                <div class="">
-                                <button class="btn btn-primary">
-                                <i class="bi bi-card-checklist"></i>
-                                </button>
-                                <button class="btn btn-secondary">
-                                <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="btn btn-danger">
-                                <i class="bi bi-trash"></i>
-                                </button>
-                                </div>
-                                </div>  
-
-                                                                <div class="border m-2 p-3">
-                                <h6>L'BEL</h6>
-                                <p>Productos de L'BEL: 7</p>
-
-                                <div class="">
-                                <button class="btn btn-primary">
-                                <i class="bi bi-card-checklist"></i>
-                                </button>
-                                <button class="btn btn-secondary">
-                                <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="btn btn-danger">
-                                <i class="bi bi-trash"></i>
-                                </button>
-                                </div>
-                                </div> *@
-                            </div>
-                            <div class="container mb-4">
-                                <button class="btn btn-outline-dark">
-                                    Agregar Subcategoría
-                                </button>
                             </div>
                         </div>
                     </div> 
 
-                    <div class="form-container">
+
+                    @*Formulario para crear una categoria*@
+                    <div class="form-container" data-bind="visible: esNuevo">
                         <div class="hidden" id="overlay" data-bind="visible: esNuevo"></div>
 
                         <section class="hidden" id="modal-design" data-bind="visible: esNuevo">
 
                             <div class="flex">
-                                <h3 class="fw-bold">Crear una categoria</h3>
+                                <h3 class="fw-bold">Crear una categoría</h3>
                                 <button class="btn btn-close" data-bind="click: focusOutCategoria"></button>
                             </div>
 
                             <form data-bind="submit: manejarSubmitCategoria">
 
                                 <div class="mb-3">
-                                    <label for="NombreCategoria" class="form-label">Nombre de la categoria</label>
+                                    <label for="NombreCategoria" class="form-label">Nombre de la categoría</label>
                                     <input type="text"
                                            data-bind="value: nombre, event: { input: enforceMaxLength }"
                                            class="form-control"
@@ -147,7 +119,6 @@
                                     <div><span data-bind="text: charCountNombreCategoria"></span>/20</div> 
                                     <div class="error text-danger" data-bind="validationMessage: nombre"></div>
                                 </div>
-
 
                                 <div class="form-agregar-categoria">
                                     <button class="btn btn-primary" type="submit" data-bind="disable: enviandoCategoria">
@@ -158,52 +129,50 @@
                                         Cancelar
                                     </a>
                                 </div>
-
                             </form> 
                         </section>
-                    </div> 
- 
+                    </div>
+
+
+                    @*Formulario para crear una subcategoria*@
+                    <div class="form-container">
+                        <div id="overlay" data-bind="visible: subcategoria"></div>
+
+                        <section id="modal-design" data-bind="visible: subcategoria">
+
+                            <div class="flex">
+                                <h3 class="fw-bold">Crear una subcategoría</h3>
+                                <button class="btn btn-close" data-bind="click: focusOutCategoria"></button>
+                            </div>
+
+                            <form data-bind="submit: manejarSubmitSubCategoria">
+
+                                <div class="mb-3">
+
+                                    <label for="NombreCategoria" class="form-label">Nombre de la subcategoría</label>
+                                    <input type="text"
+                                           data-bind="value: nombreSubCategoria, event: { input: enforceMaxLengthSub }"
+                                           class="form-control"
+                                           id="nombre">
+                                    <div><span data-bind="text: charCountNombreSubCategoria"></span>/20</div>
+                                    <div class="error text-danger" data-bind="validationMessage: nombreSubCategoria"></div>
+
+                                </div>
+
+                                <div class="form-agregar-categoria">
+                                    <button class="btn btn-primary" type="submit" data-bind="disable: enviandoSubCategoria">
+                                        Crear Subcategoría
+                                    </button>
+
+                                    <a class="btn btn-secondary" data-bind="click: focusOutCategoria">
+                                        Cancelar
+                                    </a>
+                                </div>
+                            </form>
+                        </section>
+                    </div>
+
                 </div>
-
-@*                 <div class="form-container">
-                    <div class="hidden" id="overlay" data-bind="visible: esNuevo"></div>
-
-                    <section class="hidden" id="modal-design" data-bind="visible: esNuevo">
-
-                        <div class="flex">
-                            <h3 class="fw-bold">Crear una categoria</h3>
-                            <button class="btn btn-close" data-bind="click: focusOutPropiedad">⨉</button>
-                        </div>
-
-                        <form data-bind="submit: manejarSubmitCategoria">
-
-                            <div class="mb-3">
-                                <label for="NombreCategoria" class="form-label">Nombre de la categoria</label>
-                                <input type="text"
-                                       data-bind="value: NombreCategoria, event: { input: enforceMaxLength }"
-                                       class="form-control"
-                                       id="NombreCategoria">
-                                <div><span data-bind="text: charCountNombreCategoria"></span>/20</div>
-
-                                <div class="error text-danger" data-bind="validationMessage: NombreCategoria"></div>
-
-                            </div>
-
-
-                            <div class="form-agregar-categoria">
-                                <button class="btn-agregar" type="submit" data-bind="disable: enviandoCategoria">
-                                    Crear Categoria
-                                </button>
-
-                                <button class="btn-cancelar-agregar" data-bind="click: focusOutPropiedad">
-                                    Cancelar
-                                </button>
-                            </div>
-
-                        </form>
-
-                    </section>
-        </div> *@ 
             </div>
         </div> 
     </div> 
@@ -216,17 +185,23 @@
 @section Scripts{
 
     <script src="~/js/categorias.js"></script>
+    <script src="~/js/subcategorias.js"></script>
     <script src="~/js/utilidades.js"></script>
 
     <script>
 
         const urlCategorias = "/api/categorias";
+        const urlSubcategorias = "/api/subcategorias";
         //Validaciones para los campos vacios y los mensajes de error
         ko.validation.init({
             insertMessages: false,  // Avoid inserting automatic messages
             decorateInputElement: true,
             errorElementClass: 'error'
         }, true);
+
+        //Esta es una variable para permitir que el usuario pueda seguir ingresando una subcategoria
+        //si esta ya existe.
+        let subcategoriaExiste = false;
 
         //Validation and format for the price of the format. (1,000, 10,000, etc.)
         //Formato de los precios despues de los miles
@@ -259,12 +234,17 @@
         //This function is use to get each element to push it into the list. We pass all the properties
         //of one property
         function categoriaElementoListadoViewModel
-            ({ idCategoria, nombre, subcategorias }) {
+            ({ idCategoria, nombre, subcategorias, subcategoriaId, nombreSubCategoria }) {
                  
             var self = this;
+             
             self.codigo = idCategoria;
             let maxLengthNombreCategoria = 20;
+            let maxLengthNombreSubCategoria = 20;
+
             self.idCategoria = ko.observable(idCategoria);
+
+            self.subcategoriaId = ko.observable(subcategoriaId);
 
             self.nombre = ko.observable(nombre).extend({
                 required: {
@@ -272,9 +252,15 @@
                 }
             });
 
-            self.subcategorias = ko.observableArray([]);
-             
-            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input DESCRIPTION
+            self.subcategorias = ko.observableArray(subcategorias);
+
+            self.nombreSubCategoria = ko.observable(nombreSubCategoria).extend({
+                required: {
+                    message: "Este campo es requerido"
+                }
+            });
+
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input CATEGORIA
             self.charCountNombreCategoria = ko.pureComputed(function () {
 
                 if (self.nombre() === undefined) {
@@ -284,9 +270,24 @@
                     return self.nombre().length;
                 }
             });
+
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input SUBCATEGORIA
+            self.charCountNombreSubCategoria = ko.pureComputed(function () {
+
+                if (self.nombreSubCategoria() === undefined) {
+                    return '0';
+                }
+                if (self.nombreSubCategoria() != undefined) {
+                    return self.nombreSubCategoria().length;
+                }
+            });
                
             self.esNuevo = ko.pureComputed(function () {
-                return self.idCategoria() == 0;
+                 return self.idCategoria() == 0;
+            });
+
+            self.subcategoria = ko.pureComputed(function () {
+                 return self.subcategoriaId() == 0;
             });
                   
             self.enforceMaxLength = function (data, event) {
@@ -299,19 +300,33 @@
                 }
             };
 
+            self.enforceMaxLengthSub = function (data, event) {
+                var input = event.target.value;
+                if (input.length > maxLengthNombreSubCategoria) {
+                    event.target.value = input.substring(0, maxLengthNombreSubCategoria);
+                    self.nombreSubCategoria(input.substring(0, maxLengthNombreSubCategoria));
+                } else {
+                    self.nombreSubCategoria(input);
+                }
+            };
+
             self.enviandoCategoria = ko.observable(false);
 
+            self.enviandoSubCategoria = ko.observable(false);
+             
             self.manejarSubmitCategoria = async function () {
+                self.nombreSubCategoria = "";
                 var errors = ko.validation.group(self);
 
                 if (errors().length > 0) {
+                           
                     errors.showAllMessages();
                     this.enviandoCategoria(false);
                     return;
                 }
 
                 //If the submit button is pressed, enviandoPropiedad is true and the button will be disabled
-                if (this.enviandoCategoria()) {
+                if (this.enviandoCategoria()) { 
                     return;
                 }
 
@@ -323,6 +338,38 @@
                 }
 
                 await guardarCategoria(categoria);
+                
+
+            }
+ 
+            self.manejarSubmitSubCategoria = async function () {
+                var errors = ko.validation.group(self);
+                 
+                if (errors().length > 0) {
+                    errors.showAllMessages();
+                    this.enviandoSubCategoria(false);
+                    return;
+                }
+
+                //If the submit button is pressed, enviandoPropiedad is true and the button will be disabled
+                if (this.enviandoSubCategoria()) {
+                    return;
+                }
+
+                this.enviandoSubCategoria(true);
+
+                const subcategoria = {
+                    id: self.subcategoriaId,
+                    nombreSubCategoria: self.nombreSubCategoria,
+                    categoriaId: self.idCategoria
+                };
+
+                await guardarSubCategoria(subcategoria);
+
+                if (subcategoriaExiste) {
+               
+                    this.enviandoSubCategoria(false);
+                }
             }
         }
 
@@ -375,6 +422,17 @@
                 await enviarCategoriaAlBackEnd(categoriaEditada);
                 this.haSidoPresionado(false);
             }
+        }
+
+        //Creando VM para los pasos de cada trabajo
+        function subCategoriaViewModel({ id, nombreSubcategoria }) {
+            var self = this;
+            self.id = ko.observable(id || 0);
+            self.descripcion = ko.observable(nombreSubcategoria || '');
+
+            self.esNuevo = ko.pureComputed(function () {
+                return self.id() == 0;
+            });
         }
 
         const categoriasListadoViewModel = new ListadoCategoriasViewModelFn();
