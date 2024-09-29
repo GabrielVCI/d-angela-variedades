@@ -84,7 +84,7 @@
                                         <button class="btn btn-primary">
                                             <i class="bi bi-card-checklist"></i>
                                         </button>
-                                        <button class="btn btn-secondary">
+                                        <button class="btn btn-secondary" data-bind="click: ObtenerSubCategoriaParaEditar">
                                             <i class="bi bi-pencil"></i>
                                         </button>
                                         <button class="btn btn-danger">
@@ -179,6 +179,7 @@
 </div>
     
 <partial name="_ModalEditarCategoria" />
+<partial name="_ModalEditarSubCategoria" />
  
  
  
@@ -214,7 +215,10 @@
         };
 
         const modalEditarCategoria = document.getElementById('editar-categoria');
-        const modalEditarCategoriaBTSP = new bootstrap.Modal(modalEditarCategoria);
+        const modalEditarCategoriaBTSP = new bootstrap.Modal(modalEditarCategoria);     
+        
+        const modalEditarSubCategoria = document.getElementById('editar-subcategoria');
+        const modalEditarSubCategoriaBTSP = new bootstrap.Modal(modalEditarSubCategoria);
 
         //This is the function we use to bind the data in the view and list it.
         //Funcion utilizada para relacionar los datos
@@ -337,9 +341,7 @@
                     nombre: self.nombre,
                 }
 
-                await guardarCategoria(categoria);
-                
-
+                await guardarCategoria(categoria); 
             }
  
             self.manejarSubmitSubCategoria = async function () {
@@ -423,22 +425,66 @@
                 this.haSidoPresionado(false);
             }
         }
+         
 
-        //Creando VM para los pasos de cada trabajo
-        function subCategoriaViewModel({ id, nombreSubcategoria }) {
-            var self = this;
-            self.id = ko.observable(id || 0);
-            self.descripcion = ko.observable(nombreSubcategoria || '');
+        //Editar subcategoria
+        const subcategoriaEditarViewModel = {
 
-            self.esNuevo = ko.pureComputed(function () {
-                return self.id() == 0;
-            });
+            id: 0,
+            nombre: ko.observable('').extend({ required: { message: "Este campo es requerido" } }),
+
+            maxLengthNombreSubCategoria: 20,
+
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input DESCRIPTION
+            charCountNombreSubCategoria: ko.pureComputed(function () {
+                return subcategoriaEditarViewModel.nombre() ? subcategoriaEditarViewModel.nombre().length : '0';
+            }),
+
+            enforceMaxLength: function (data, event) {
+                var input = event.target.value;
+                if (input.length > subcategoriaEditarViewModel.maxLengthNombreSubCategoria) {
+                    event.target.value = input.substring(0, subcategoriaEditarViewModel.maxLengthNombreSubCategoria);
+                    subcategoriaEditarViewModel.nombre(input.substring(0, subcategoriaEditarViewModel.maxLengthNombreSubCategoria));
+                } else {
+                    subcategoriaEditarViewModel.nombre(input);
+                }
+            },
+
+            //variable to verify if the guardar button has been pressed
+            haSidoPresionado: ko.observable(false),
+
+            manejarSubmitEditarSubCategoria: async function () {
+
+                var errors = ko.validation.group(this)
+
+                if (errors().length > 0) {
+                    errors.showAllMessages();
+                    this.haSidoPresionado(false);
+                    return;
+                }
+
+                if (this.haSidoPresionado()) {
+                    return;
+                }
+
+                this.haSidoPresionado(true);
+
+                const subcategoriaEditada = {
+                    Id: this.id,
+                    Nombre: this.nombre()
+                }
+
+                await enviarSubcategoriaAlBackEnd(subcategoriaEditada);
+                this.haSidoPresionado(false);
+            }
         }
+         
 
         const categoriasListadoViewModel = new ListadoCategoriasViewModelFn();
 
         ko.applyBindings(categoriasListadoViewModel, document.getElementById('contenedor-listado-categorias'));
         ko.applyBindings(categoriaEditarViewModel, document.getElementById('editar-categoria'));
+        ko.applyBindings(subcategoriaEditarViewModel, document.getElementById('editar-subcategoria'));
         ObtenerListadoCategorias()
     </script>
 }

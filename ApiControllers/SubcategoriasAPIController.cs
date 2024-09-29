@@ -68,5 +68,49 @@ namespace d_angela_variedades.ApiControllers
 
             return Ok(subcategoriaAGuardar);
         }
+
+        [HttpGet("{subcategoriaId:int}")]
+        public async Task<ActionResult<Subcategoria>> Get(int subcategoriaId)
+        { 
+            var subcategoria = await subCategoriaRepositorio.ObtenerSubcategoria(subcategoriaId);
+
+            if( subcategoria is null)
+            {
+                ModelState.AddModelError("", "Error al obtener la subcategoria");
+                return StatusCode(500, ModelState);
+            }
+            return subcategoria;
+        }
+
+        [HttpPut("{subcategoriaId:int}")]
+        public async Task<ActionResult<Subcategoria>> Put([FromBody] SubcategoriaDTO subcategoria, int subcategoriaId)
+        {
+            if(!ModelState.IsValid)
+            {
+                return StatusCode(500, ModelState);
+            }
+
+            if(subcategoria is null)
+            {
+                return BadRequest();
+            }
+
+            var subcategoriaExiste = await subCategoriaRepositorio.SubCategoriaExiste(subcategoria.Name);
+            if (subcategoriaExiste)
+            {
+                ModelState.AddModelError(string.Empty, "Esta subcategoria ya existe");
+                return StatusCode(422, ModelState);
+            }
+
+            var subcategoriaAEditar = await subCategoriaRepositorio.EditarSubcategoria(subcategoria, subcategoriaId);
+
+            if(!subcategoriaAEditar)
+            {
+                ModelState.AddModelError("", "Error al editar la subcategoria");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok();
+        }
     }
 }

@@ -13,9 +13,14 @@ namespace d_angela_variedades.Repositorio
         {
             this.context = context;
         }
-        public Task<bool> EditarSubcategoria(Subcategoria subcategoria, int subcategoriaId, int categoriaId)
+        public async Task<bool> EditarSubcategoria(SubcategoriaDTO subcategoria, int subcategoriaId)
         {
-            throw new NotImplementedException();
+            var subcategoriaAEditar = await context.Subategorias.FirstOrDefaultAsync(subcat => subcat.IdSubCategoria == subcategoriaId);
+
+            subcategoriaAEditar.Name = subcategoria.Name;
+
+            context.Update(subcategoriaAEditar);
+            return await Save();
         }
 
         public Task<bool> EliminarSubcategoria(int subcategoriaId, int categoriaId)
@@ -38,6 +43,13 @@ namespace d_angela_variedades.Repositorio
             
         }
 
+        public async Task<Subcategoria> ObtenerSubcategoria(int subcategoriaId)
+        {
+            var subcategoria = await context.Subategorias.FirstOrDefaultAsync(subcat => subcat.IdSubCategoria == subcategoriaId);
+
+            return subcategoria;
+        }
+
         public async Task<bool> Save()
         {
             var save = await context.SaveChangesAsync();
@@ -45,11 +57,22 @@ namespace d_angela_variedades.Repositorio
             return save > 0 ? true : false;
         }
 
-        public async Task<bool> SubCategoriaExiste(string NombreSubcategoria)
+        public async Task<bool> SubCategoriaExiste(string nombreSubcategoria)
         {
-            var subcategoriaExiste = await context.Subategorias.AnyAsync(subcat => subcat.Name == NombreSubcategoria);  
-
+            var subcategoriaExiste = await context.Subategorias.AnyAsync(subcat => subcat.Name == nombreSubcategoria);  
             return subcategoriaExiste;
+        }
+
+        public async Task<bool> SubcategoriaPerteneceAlaCategoria(int categoriaId, int subcategoriaId)
+        {
+            var subcategoriaPerteneceAlacategoria = await 
+                context.Subategorias
+                .AnyAsync(subcat => 
+                            subcat.IdCategoria == categoriaId && 
+                            subcat.IdSubCategoria == subcategoriaId);
+
+            return subcategoriaPerteneceAlacategoria;
+
         }
     }
 }

@@ -40,4 +40,65 @@ async function guardarSubCategoria(subcategoria) {
 
     MensajeDeExito("La subcategoría ha sido creada");
     ObtenerListadoCategorias();
+} 
+
+
+async function ObtenerSubCategoriaParaEditar(subcategoria) {
+
+     try {
+        const response = await fetch(`${urlSubcategorias}/${subcategoria.idSubCategoria}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            manejarErrorApi(response);
+            return;
+        }
+
+        const json = await response.json();
+
+        subcategoriaEditarViewModel.id = json.idSubCategoria;
+        subcategoriaEditarViewModel.nombre(json.name);
+        modalEditarSubCategoriaBTSP.show();
+         
+    } catch (error) {
+        manejarErrorApi(error);
+        return;
+    }
+
+} 
+
+async function enviarSubcategoriaAlBackEnd(subcategoria) {
+
+    completandoAccionTimer();
+
+    let nombreSubCategoria = subcategoria.Nombre;
+
+    const object = {
+        "Name": nombreSubCategoria
+    }
+
+    const data = JSON.stringify(object);
+
+    const response = await fetch(`${urlSubcategorias}/${subcategoria.Id}`, {
+        method: "PUT",
+        body: data,
+        headers: {
+            'Content-Type': "application/json"
+        }
+    });
+
+    if (!response.ok) {
+        manejarErrorApi(response);
+        return;
+    }
+     
+ 
+    mensajeExitoAccionCompletada("Subcategoría editada correctamente");
+    await ObtenerListadoCategorias();
+
+    modalEditarSubCategoriaBTSP.hide(); 
 }
