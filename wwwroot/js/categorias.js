@@ -78,7 +78,7 @@ async function focusOutCategoria(){
 async function enviarCategoriaAlBackEnd(categoria) { 
 
     completandoAccionTimer();
-    console.log(categoria);
+     
     let nombreCategoria = categoria.Nombre;
 
     const object = {
@@ -127,7 +127,7 @@ async function ObtenerCategoriaParaEditar(categoria) {
     }
 
     const json = await response.json();
-    console.log(json)
+ 
     categoriaEditarViewModel.id = json.idCategoria;
     categoriaEditarViewModel.nombre(json.nombre);
 
