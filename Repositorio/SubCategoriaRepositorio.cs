@@ -23,9 +23,13 @@ namespace d_angela_variedades.Repositorio
             return await Save();
         }
 
-        public Task<bool> EliminarSubcategoria(int subcategoriaId, int categoriaId)
+        public async Task<bool> EliminarSubcategoria(int subcategoriaId)
         {
-            throw new NotImplementedException();
+            var subcategoria = await context.Subategorias.FirstOrDefaultAsync(subcat => subcat.IdSubCategoria == subcategoriaId);
+
+            context.Remove(subcategoria);
+
+            return await Save();
         }
 
         public async Task<Subcategoria> GuardarSubcategoria(SubcategoriaDTO subcategoria, int categoriaId)
