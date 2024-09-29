@@ -8,7 +8,7 @@ namespace d_angela_variedades.Interfaces
     {
         Task<Subcategoria> GuardarSubcategoria(SubcategoriaDTO subcategoria, int categoriaId);
         Task<bool> EditarSubcategoria(SubcategoriaDTO subcategoria, int subcategoriaId);
-        Task<bool> EliminarSubcategoria(int subcategoriaId, int categoriaId);
+        Task<bool> EliminarSubcategoria(int subcategoriaId);
         Task<bool> Save();
         Task<bool> SubcategoriaPerteneceAlaCategoria(int categoriaId, int subcategoria);
         Task<bool> SubCategoriaExiste(string nombreSubcategoria);

@@ -164,9 +164,9 @@ function confirmarElimininacionCategoria(categoria) {
             return;
         },
 
-        titulo: '¿Desea borrar esta categoría?',
+        titulo: `¿Desea borrar la categoría ${categoria.nombre}?`,
 
-        text: "Se eliminará de su lista de categorías"
+        text: "Se eliminará de su lista de categorías, también todos los productos relacionados a esta"
     });
 }
 

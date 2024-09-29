@@ -102,3 +102,36 @@ async function enviarSubcategoriaAlBackEnd(subcategoria) {
 
     modalEditarSubCategoriaBTSP.hide(); 
 }
+
+
+async function eliminarSubCategoria(subcategoria) {
+
+    completandoAccionTimer();
+    const response = await fetch(`${urlSubcategorias}/${subcategoria.idSubCategoria}`, {
+        method: 'DELETE'
+    });
+
+    if (!response.ok) {
+        manejarErrorApi(response);
+        return;
+    }
+
+    ObtenerListadoCategorias();
+    mensajeExitoAccionCompletada("Subcategoría eliminada correctamente");
+}
+
+function confirmarElimininacionSubcategoria(subcategoria) {
+    console.log(subcategoria)
+    confirmarAction({
+        callbackAceptar: () => {
+            eliminarSubCategoria(subcategoria);
+        },
+        callbackCancelar: () => {
+            return;
+        },
+
+        titulo: `¿Desea borrar la subcategoría ${subcategoria.name}?`,
+
+        text: "Se eliminará de su lista de subcategorías, también todos los productos relacionados a esta"
+    });
+}
