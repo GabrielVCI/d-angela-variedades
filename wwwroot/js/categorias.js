@@ -15,6 +15,7 @@ async function guardarCategoria(categoria) {
 
         const object = {
             "Nombre": nombreCategoria
+            
         };
 
         const data = JSON.stringify(object);

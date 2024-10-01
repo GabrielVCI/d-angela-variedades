@@ -58,7 +58,7 @@ namespace d_angela_variedades.API
         }
 
         [HttpPost]
-        public async Task<ActionResult<Categoria>> Post([FromBody] Categoria nombreCategoria)
+        public async Task<ActionResult<Categoria>> Post([FromBody] CategoriaEditarDTO nombreCategoria)
         {
             var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
 
