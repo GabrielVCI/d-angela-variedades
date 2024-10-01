@@ -10,7 +10,6 @@ function agregarNuevaCategoria() {
 
 async function guardarCategoria(categoria) {
      
-     
     try {
         const nombreCategoria = categoria.nombre();
 
@@ -155,7 +154,6 @@ async function eliminarCategoria(categoria) {
 }
 
 function confirmarElimininacionCategoria(categoria) {
-
     confirmarAction({
         callbackAceptar: () => {
             eliminarCategoria(categoria);
@@ -164,7 +162,7 @@ function confirmarElimininacionCategoria(categoria) {
             return;
         },
 
-        titulo: `¿Desea borrar la categoría ${categoria.nombre}?`,
+        titulo: `¿Desea borrar la categoría ${categoria.nombre()}?`,
 
         text: "Se eliminará de su lista de categorías, también todos los productos relacionados a esta"
     });
