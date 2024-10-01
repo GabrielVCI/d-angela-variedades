@@ -21,7 +21,7 @@ namespace d_angela_variedades.ApiControllers
             this.subCategoriaRepositorio = subCategoriaRepositorio;
             this.usuariosRepositorio = usuariosRepositorio;
         }
-
+            
         [HttpPost("{categoriaId:int}")]
         public async Task<ActionResult<Subcategoria>> Post([FromBody] SubcategoriaDTO subcategoria, int categoriaId)
         {

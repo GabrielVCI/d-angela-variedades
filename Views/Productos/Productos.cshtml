@@ -1,287 +1,415 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Listado de Productos";
+}
+
 <header class="bg-dark py-5">
     <div class="container px-4 px-lg-5 my-5">
         <div class="form-container mb-4">
-            <form class="d-flex">
-                 <input class="form-control" placeholder="Ingrese el nombre de un producto"/>
-                 <button class="btn btn-outline-light"><i class="bi bi-search"></i></button>
-            </form>
+
         </div>
         <div class="text-center text-white mb-3">
-            <h1 class="display-4 fw-bolder">Cosmeticos</h1>
+            <h1 class="display-4 fw-bolder">Listado de productos</h1>
             <p class="lead fw-normal text-white-50 mb-0">
-                Todos los productos de la categoria Calzados, dividios en subcategorias.
+                Todos los productos de todas las categorias.
             </p>
         </div>
     </div>
 </header>
 
 
-<section class="py-5">
+<div class="products-container">
 
-    <div class="listado-de-subcategorias">
-
-        <div class="subcategoria-container mb-5">
-
-            <h5 class="display-4 ms-5">Productos Esika</h5>
-            <div class="container px-4 px-lg-5 mt-5">
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center d-flex flex-column">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Pinta Labios</h5>
-                                    <!-- Product price-->
-                                    <p>$40.00 - $80.00</p>
-                                    <p>Stock: 5</p> 
-                                    <p>Pequeña descripcion</p>
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center">
-                                    <a class="btn btn-outline-success mt-auto" href="#">
-                                        Vender
-                                        <i class="bi bi-"></i>
-                                    </a>
-                                    <a class="btn btn-outline-primary">
-                                        
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-
-                                    <a class="btn btn-outline-danger">
-                                        
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center d-flex flex-column">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Polvo</h5>
-                                    <!-- Product price-->
-                                    <p>$40.00 - $80.00</p>
-                                    <p>Stock: 2</p>
-                                    <p>Pequeña descripcion</p>
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center">
-                                    <a class="btn btn-outline-success mt-auto" href="#">
-                                        Vender
-                                        <i class="bi bi-"></i>
-                                    </a>
-                                    <a class="btn btn-outline-primary">
-
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-
-                                    <a class="btn btn-outline-danger">
-
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center d-flex flex-column">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Deliniador</h5>
-                                    <!-- Product price-->
-                                    <p>$40.00 - $80.00</p>
-                                    <p>Stock: 5</p>
-                                    <p>Pequeña descripcion</p>
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center">
-                                    <a class="btn btn-outline-success mt-auto" href="#">
-                                        Vender
-                                        <i class="bi bi-"></i>
-                                    </a>
-                                    <a class="btn btn-outline-primary">
-
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-
-                                    <a class="btn btn-outline-danger">
-
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center d-flex flex-column">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Plush</h5>
-                                    <!-- Product price-->
-                                    <p>$40.00 - $80.00</p>
-                                    <p>Stock: 5</p>
-                                    <p>Pequeña descripcion</p>
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center">
-                                    <a class="btn btn-outline-success mt-auto" href="#">
-                                        Vender
-                                        <i class="bi bi-"></i>
-                                    </a>
-                                    <a class="btn btn-outline-primary">
-
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-
-                                    <a class="btn btn-outline-danger">
-
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="products-actions-container">
+         
+        <div class="buscador-filtro">
+            <button class="btn button-filtrar-producto me-4">Filtro
+                <i class="bi bi-filter" style="font-size: 15px;"></i>
+             </button>
+            <form class="d-flex">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control buscador-producto" placeholder="Nombre del producto">
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                        <i class="bi bi-search"></i>
+                    </button>
                 </div>
-            </div>
+            </form>
+        </div>
+        <div class="crear-producto-btn-container">
+            <button class="button-agregar-producto" onclick="agregarNuevoProducto()">Agregar Producto</button>
         </div>
 
-        <div class="subcategoria-container mb-5">
-
-            <h5 class="display-4 ms-5">Productos Cyzone</h5>
-            <div class="container px-4 px-lg-5 mt-5">
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Fancy Product</h5>
-                                    <!-- Product price-->
-                                    $40.00 - $80.00
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Sale Item</h5>
-                                    <!-- Product price-->
-                                    <span class="text-muted text-decoration-line-through">$50.00</span>
-                                    $25.00
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Popular Item</h5>
-                                    <!-- Product reviews-->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    <!-- Product price-->
-                                    $40.00
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Sale Item</h5>
-                                    <!-- Product price-->
-                                    <span class="text-muted text-decoration-line-through">$50.00</span>
-                                    $25.00
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
+
+    <div class="listado-container-tabla-productos" id="producto-listado-contenedor">
+        <div class="table-container" data-bind="foreach: productos">
+            @*Formulario para crear un producto*@
+            <div class="form-container" data-bind="visible: esNuevo">
+                <div class="hidden" id="overlay" data-bind="visible: esNuevo"></div>
+
+                <section class="hidden" id="modal-design-producto" data-bind="visible: esNuevo">
+
+                    <div class="flex">
+                        <h3 class="fw-bold">Crear un producto</h3>
+                        <button class="btn btn-close" data-bind="click: focusOutProductos"></button>
+                    </div>
+
+                    <form data-bind="submit: manejarSubmitProducto">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="mb-4">
+                                    <label for="NombreProducto" class="form-label">Nombre del producto</label>
+                                    <input type="text"
+                                           data-bind="value: nombreProducto, event: { input: enforceMaxLength }"
+                                           class="form-control"
+                                           id="nombre">
+                                    <div><span data-bind="text: charCountNombreProducto"></span>/20</div>
+                                    <div class="error error-producto text-danger" data-bind="validationMessage: nombreProducto"></div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="NombreCategoria" class="form-label">Precio</label>
+                                    <input type="number"
+                                           data-bind="value: precio"
+                                           class="form-control"
+                                           id="nombre">
+                                    <div class="error error-producto text-danger" data-bind="validationMessage: precio"></div>
+                                </div>
+
+                                <div class="mb-4">
+
+                                    <label for="categorias" class="form-label">Categoría</label> <br>
+                                    <select class="custom-select form-select" id="categorias"
+                                            data-bind="options: categoriasSeleccion,
+                                                                   optionsText: 'nombre',
+                                                                   value: categoria">
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="mb-4">
+                                    <label for="NombreCategoria" class="form-label">Descripción</label>
+                                    <input type="text"
+                                           data-bind="value: descripcion, event: { input: enforceMaxLengthDescripcion }"
+                                           class="form-control"
+                                           id="nombre">
+                                    <div><span data-bind="text: charCountDescripcion"></span>/20</div>
+                                    <div class="error error-producto text-danger" data-bind="validationMessage: descripcion"></div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="NombreCategoria" class="form-label">Stock</label>
+                                    <input type="number"
+                                           data-bind="value: stock"
+                                           class="form-control"
+                                           id="nombre">
+                                    <div class="error error-producto text-danger" data-bind="validationMessage: stock"></div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="categorias" class="form-label">Subcategoría</label> <br>
+                                    <select class="custom-select form-select" id="subcategorias"
+                                            data-bind="options: subcategoriasSeleccion,
+                                           optionsText: 'name',
+                                           value: subcategoria">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-agregar-producto">
+                            <button class="button-guardar-producto-agregado" type="submit" data-bind="disabled: enviandoProducto">
+                                Guardar Producto
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr class="table-trows">
+                        <th scope="col">CÓDIGO</th>
+                        <th scope="col">NOMBRE</th>
+                        <th scope="col">PRECIO</th>
+                        <th scope="col">DESCRIPCIÓN</th>
+                        <th scope="col">CATEGORÍA</th>
+                        <th scope="col">SUBCATEGORÍA</th>
+                        <th scope="col">ACCIONES</th>
+                    </tr>
+                </thead> 
+                  
+                <tbody class="table-body">
+                  
+                    <tr>
+                        <td>Mark</td>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>mdo</td>
+                        <td>mdo</td>
+                        <td>mdo</td>
+                        <td>
+                            <div class="actions-producto-btn-container">
+                                <button>
+                                    <i class="bi bi-eye-fill" style="color: green"></i>
+                                </button>
+                                <button>
+                                    <i class="bi bi-pencil" style="color: blue"></i>
+                                </button>
+                                <button>
+                                    <i class="bi bi-trash" style="color: red"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </div>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="categorias-funcionalities">
+            <div data-bind="visible: cargando" class="spinner-border">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+
+            <div data-bind="visible: noHayProductos">
+                <p>No tienes productos registrados.</p>
+            </div>
+        </div>
+       
+    </div>
+
  
 
+@section Scripts{
 
-</section>
+    <script src="~/js/productos.js"></script>
+    <script src="~/js/categorias.js"></script>
+    <script src="~/js/utilidades.js"></script>
+
+    <script>
+
+        const urlCategorias = "/api/categorias";
+        const urlSubategorias = "/api/subcategorias";
+        const urlProductos = "/api/productos";
+
+        //Validaciones para los campos vacios y los mensajes de error
+        ko.validation.init({
+            insertMessages: false,  // Avoid inserting automatic messages
+            decorateInputElement: true,
+            errorElementClass: 'error'
+        }, true);
+
+        //Validation and format for the price of the format. (1,000, 10,000, etc.)
+        //Formato de los precios despues de los miles
+        ko.bindingHandlers.currency = {
+            update: function (element, valueAccessor) {
+                var value = ko.unwrap(valueAccessor());
+                var formattedValue = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                element.value = formattedValue;
+            }
+        };
+
+        //This is the function we use to bind the data in the view and list it.
+        //Funcion utilizada para relacionar los datos, esta vez, de los productos
+        function ListadoProductosViewModelFn() {
+            var self = this;
+            self.productos = ko.observableArray([]);
+            self.cargando = ko.observable(true);
+
+            self.noHayProductos = ko.pureComputed(function () {
+                if (self.cargando()) {
+                    return false;
+                }
+                return self.productos().length === 0;
+            });
+        }
+
+        //This function is use to get each element to push it into the list. We pass all the properties
+        //of one property
+        function productoElementoListadoViewModel
+            ({ idProducto, nombreProducto, precio, stock, descripcion, categoria, subcategoria, categoriaId, subcategoriaId}) {
+
+            var self = this;
+             
+            let maxLengthNombreProducto = 20;
+            let maxLengthDescripcion = 20;
+ 
+            self.idProducto = ko.observable(idProducto);
+
+            self.subcategoriaId = ko.observable(subcategoriaId);
+
+            self.nombreProducto = ko.observable(nombreProducto).extend({
+                required: {
+                    message: "Este campo es requerido"
+                }
+            });
+
+            self.descripcion = ko.observable(descripcion).extend({
+                required: {
+                    message: "Este campo es requerido"
+                }
+            });
+
+            self.precio = ko.observable(precio).extend({
+                required: {
+                    message: "Este campo es requerido"
+                },
+                maxLength: { params: 5, message: "Para agregar este precio, comuníquese con el administrador" },
+                number: { message: "Solo números" }
+            });
+ 
+
+            self.stock = ko.observable(stock).extend({
+                required: {
+                    message: "Este campo es requerido"
+                },
+                maxLength: { params: 5, message: "Para agregar más productos, comuníquese con el administrador" },
+                number: { message: "Solo números" }
+            });
+
+            self.categoria = ko.observable(categoria);
+            self.subcategoria = ko.observable(subcategoria);
+             
+            self.categoriasData = ko.observableArray([]);
+            self.subcategoriasData = ko.observableArray([]);
+
+            self.categoriasSeleccion = ko.observableArray([]);
+            self.subcategoriasSeleccion = ko.observableArray([]);
+
+            //Async function to load data into the observable array
+            self.loadCategoriasData = async function () {
+                try {
+                    const data = await ObtenerCategorias();
+                    if (data) {
+                        self.categoriasSeleccion(data);
+                        return data;
+                    } else {
+                        console.error("Error al cargar las categorias");
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            };
+
+            //Cargando las categorias
+            self.loadCategoriasData();
+
+            // Update the selected category observable whenever the selectedcategoryId changes
+            self.categoria.subscribe(async function (categoriaSeleccionada) {
+                if (categoriaSeleccionada) {
+                    try {
+                        //const data = await ObtenerSubcategorias(categoriaSeleccionada.idCategoria);
+                        console.log("data", categoriaSeleccionada)
+                        if (categoriaSeleccionada) {
+
+                            self.subcategoriasSeleccion(categoriaSeleccionada.subcategorias);
+                        } else {
+                            console.error("Error al cargar las subcategorias");
+                            return;
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                }
+            });
+
+            //Price that we display in each property, correctly formated.
+            self.formatPrice = ko.pureComputed({
+                read: function () {
+                    if (self.precio() !== undefined) {
+                        return self.precio().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    } else {
+                        return '';
+                    }
+                },
+                write: function (value) {
+                    self.precio(value.replace(/,/g, ''));
+                }
+            });
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input CATEGORIA
+            self.charCountNombreProducto = ko.pureComputed(function () {
+
+                if (self.nombreProducto() === undefined) {
+                    return '0';
+                }
+                if (self.nombreProducto() != undefined) {
+                    return self.nombreProducto().length;
+                }
+            });
+
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input SUBCATEGORIA
+            self.charCountDescripcion = ko.pureComputed(function () {
+
+                if (self.descripcion() === undefined) {
+                    return '0';
+                }
+                if (self.descripcion() != undefined) {
+                    return self.descripcion().length;
+                }
+            });
+
+            self.esNuevo = ko.pureComputed(function () {
+                return self.idProducto() == 0;
+            });
+              
+            self.enforceMaxLength = function (data, event) {
+                var input = event.target.value;
+                if (input.length > maxLengthNombreProducto) {
+                    event.target.value = input.substring(0, maxLengthNombreProducto);
+                    self.nombreProducto(input.substring(0, maxLengthNombreProducto));
+                } else {
+                    self.nombreProducto(input);
+                }
+            };
+
+            self.enforceMaxLengthDescripcion = function (data, event) {
+                var input = event.target.value;
+                if (input.length > maxLengthDescripcion) {
+                    event.target.value = input.substring(0, maxLengthDescripcion);
+                    self.descripcion(input.substring(0, maxLengthDescripcion));
+                } else {
+                    self.descripcion(input);
+                }
+            };
+
+            self.enviandoProducto = ko.observable(false);
+ 
+            self.manejarSubmitProducto = async function () {
+                 
+                var errors = ko.validation.group(self);
+
+                if (errors().length > 0) {
+                     
+                    errors.showAllMessages();
+                    this.enviandoProducto(false);
+                    return;
+                }
+
+                //If the submit button is pressed, enviandoPropiedad is true and the button will be disabled
+                if (this.enviandoProducto()) {
+                    return;
+                }
+
+                this.enviandoProducto(true);
+
+                const producto = {
+                    id: self.idProducto,
+                    nombreProducto: self.nombreProducto,
+                    descripcion: self.descripcion,
+                    stock: self.stock,
+                    precio: self.precio,
+                    categoria: self.categoria(),
+                    subcategoria: self.subcategoria()
+                }
+
+                await guardarProducto(producto);
+                this.enviandoProducto(false);
+            }
+        }
+
+        const productosListadoViewModel = new ListadoProductosViewModelFn();
+        ko.applyBindings(productosListadoViewModel, document.getElementById('producto-listado-contenedor'));
+        ObtenerProductos();
+    </script>
+}

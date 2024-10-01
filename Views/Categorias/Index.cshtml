@@ -13,7 +13,7 @@
                     Este apartado es para que registres los productos de tu negocio, 
                     de una forma ordenada, diviéndolos en categorías y subcategorías para una fácil clasificación.                        </p>
                     <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
-                        <button class="btn btn-primary btn-lg px-4 me-sm-3" >Agregar Producto</button>
+                        <button class="btn btn-primary btn-lg px-4 me-sm-3" onclick="agregarNuevoProducto()">Agregar Producto</button>
                         <button class="btn btn-outline-light btn-lg px-4" onclick="agregarNuevaCategoria()">Crear Categoría</button>
                     </div>
                 </div>
@@ -187,12 +187,14 @@
 
     <script src="~/js/categorias.js"></script>
     <script src="~/js/subcategorias.js"></script>
+    <script src="~/js/productos.js"></script>
     <script src="~/js/utilidades.js"></script>
 
     <script>
 
         const urlCategorias = "/api/categorias";
         const urlSubcategorias = "/api/subcategorias";
+        const urlProductos = "/api/productos";
         //Validaciones para los campos vacios y los mensajes de error
         ko.validation.init({
             insertMessages: false,  // Avoid inserting automatic messages
@@ -234,6 +236,8 @@
                 return self.categorias().length === 0;
             });
         }
+
+
 
         //This function is use to get each element to push it into the list. We pass all the properties
         //of one property
