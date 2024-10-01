@@ -18,7 +18,7 @@ namespace d_angela_variedades.Repositorio
             this.usuariosRepositorio = usuariosRepositorio;
         }
 
-        public async Task<Categoria> AgregarCategoria(Categoria nombreCategoria, int empresaUsuarioId)
+        public async Task<Categoria> AgregarCategoria(CategoriaEditarDTO nombreCategoria, int empresaUsuarioId)
         { 
             var nuevaCategoria = new Categoria();
 
