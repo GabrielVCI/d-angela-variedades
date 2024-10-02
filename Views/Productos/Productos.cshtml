@@ -41,7 +41,8 @@
     </div>
 
     <div class="listado-container-tabla-productos" id="producto-listado-contenedor">
-        <div class="table-container" data-bind="foreach: productos">
+
+        <div data-bind="foreach: productos">
             @*Formulario para crear un producto*@
             <div class="form-container" data-bind="visible: esNuevo">
                 <div class="hidden" id="overlay" data-bind="visible: esNuevo"></div>
@@ -59,11 +60,11 @@
                                 <div class="mb-4">
                                     <label for="NombreProducto" class="form-label">Nombre del producto</label>
                                     <input type="text"
-                                           data-bind="value: nombreProducto, event: { input: enforceMaxLength }"
+                                           data-bind="value: nombre, event: { input: enforceMaxLength }"
                                            class="form-control"
                                            id="nombre">
                                     <div><span data-bind="text: charCountNombreProducto"></span>/20</div>
-                                    <div class="error error-producto text-danger" data-bind="validationMessage: nombreProducto"></div>
+                                    <div class="error error-producto text-danger" data-bind="validationMessage: nombre"></div>
                                 </div>
 
                                 <div class="mb-4">
@@ -76,14 +77,12 @@
                                 </div>
 
                                 <div class="mb-4">
-
                                     <label for="categorias" class="form-label">Categoría</label> <br>
                                     <select class="custom-select form-select" id="categorias"
                                             data-bind="options: categoriasSeleccion,
                                                                    optionsText: 'nombre',
                                                                    value: categoria">
                                     </select>
-
                                 </div>
                             </div>
                             <div class="col-6">
@@ -125,6 +124,8 @@
                     </form>
                 </section>
             </div>
+        </div>
+        <div class="table-container">
             <table class="table">
                 <thead>
                     <tr class="table-trows">
@@ -138,15 +139,27 @@
                     </tr>
                 </thead> 
                   
-                <tbody class="table-body">
-                  
+                <tbody class="table-body" data-bind="foreach: productos">
+                    
                     <tr>
-                        <td>Mark</td>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>mdo</td>
-                        <td>mdo</td>
-                        <td>mdo</td>
+                        <td>
+                            <span data-bind="text: nombre"></span>
+                        </td>
+                        <td>
+                            <span data-bind="text: nombre"></span>
+                        </td>
+                        <td>
+                            <span data-bind="text: precio"></span>
+                        </td>
+                        <td>
+                            <span data-bind="text: descripcion"></span>
+                        </td>
+                        <td>
+                            <span data-bind="text: nombreCategoria"></span>
+                        </td>
+                        <td>
+                            <span data-bind="text: nombreSubcategoria"></span>
+                        </td>
                         <td>
                             <div class="actions-producto-btn-container">
                                 <button>
@@ -160,12 +173,12 @@
                                 </button>
                             </div>
                         </td>
-                    </tr>
-                    </div>
+                    </tr>  
                 </tbody>
             </table>
+       </div>
 
-        </div>
+
         <div class="categorias-funcionalities">
             <div data-bind="visible: cargando" class="spinner-border">
                 <span class="visually-hidden">Cargando...</span>
@@ -175,10 +188,10 @@
                 <p>No tienes productos registrados.</p>
             </div>
         </div>
-       
-    </div>
+   </div>
 
- 
+       
+</div>
 
 @section Scripts{
 
@@ -227,7 +240,7 @@
         //This function is use to get each element to push it into the list. We pass all the properties
         //of one property
         function productoElementoListadoViewModel
-            ({ idProducto, nombreProducto, precio, stock, descripcion, categoria, subcategoria, categoriaId, subcategoriaId}) {
+                ({ idProducto, nombre, precio, stock, descripcion, categoria, subcategoria, idCategoria, idSubCategoria }) {
 
             var self = this;
              
@@ -236,9 +249,10 @@
  
             self.idProducto = ko.observable(idProducto);
 
-            self.subcategoriaId = ko.observable(subcategoriaId);
+            self.idCategoria = ko.observable(idCategoria);
+            self.idSubCategoria = ko.observable(idSubCategoria);
 
-            self.nombreProducto = ko.observable(nombreProducto).extend({
+            self.nombre = ko.observable(nombre).extend({
                 required: {
                     message: "Este campo es requerido"
                 }
@@ -267,14 +281,18 @@
                 number: { message: "Solo números" }
             });
 
-            self.categoria = ko.observable(categoria);
+            self.categoria = ko.observable(self.categoria);
             self.subcategoria = ko.observable(subcategoria);
-             
             self.categoriasData = ko.observableArray([]);
             self.subcategoriasData = ko.observableArray([]);
 
             self.categoriasSeleccion = ko.observableArray([]);
             self.subcategoriasSeleccion = ko.observableArray([]);
+
+
+            self.esNuevo = ko.pureComputed(function () {
+                return self.idProducto() == 0;
+            });
 
             //Async function to load data into the observable array
             self.loadCategoriasData = async function () {
@@ -293,16 +311,32 @@
             };
 
             //Cargando las categorias
-            self.loadCategoriasData();
+            if (self.esNuevo()) {
+                self.loadCategoriasData();
+            }
+
+            self.nombreCategoria = ko.observable();
+            self.nombreSubcategoria = ko.observable();
+
+            //Función para asignar el nombre de la categoría y de la subcategoría a las variables
+            self.asignarCategoriaySubcategoria = async function () {
+
+                const categoria = await obtenerCategoria(idCategoria);
+                self.nombreCategoria(categoria);
+                
+                const subcategoria = await obtenerSubcategoria(idSubCategoria);
+                self.nombreSubcategoria(subcategoria);
+            }
+             
+            //Ejecutando la función  
+            if (!self.esNuevo()) { 
+                self.asignarCategoriaySubcategoria();
+            }
 
             // Update the selected category observable whenever the selectedcategoryId changes
-            self.categoria.subscribe(async function (categoriaSeleccionada) {
-                if (categoriaSeleccionada) {
+            self.categoria.subscribe(async function (categoriaSeleccionada) { 
                     try {
-                        //const data = await ObtenerSubcategorias(categoriaSeleccionada.idCategoria);
-                        console.log("data", categoriaSeleccionada)
                         if (categoriaSeleccionada) {
-
                             self.subcategoriasSeleccion(categoriaSeleccionada.subcategorias);
                         } else {
                             console.error("Error al cargar las subcategorias");
@@ -311,7 +345,7 @@
                     } catch (error) {
                         console.error('Error:', error);
                     }
-                }
+               
             });
 
             //Price that we display in each property, correctly formated.
@@ -327,14 +361,16 @@
                     self.precio(value.replace(/,/g, ''));
                 }
             });
+             
+        
             //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input CATEGORIA
             self.charCountNombreProducto = ko.pureComputed(function () {
 
-                if (self.nombreProducto() === undefined) {
+                if (self.nombre() === undefined) {
                     return '0';
                 }
-                if (self.nombreProducto() != undefined) {
-                    return self.nombreProducto().length;
+                if (self.nombre() != undefined) {
+                    return self.nombre().length;
                 }
             });
 
@@ -349,17 +385,14 @@
                 }
             });
 
-            self.esNuevo = ko.pureComputed(function () {
-                return self.idProducto() == 0;
-            });
               
             self.enforceMaxLength = function (data, event) {
                 var input = event.target.value;
                 if (input.length > maxLengthNombreProducto) {
                     event.target.value = input.substring(0, maxLengthNombreProducto);
-                    self.nombreProducto(input.substring(0, maxLengthNombreProducto));
+                    self.nombre(input.substring(0, maxLengthNombreProducto));
                 } else {
-                    self.nombreProducto(input);
+                    self.nombre(input);
                 }
             };
 
@@ -395,7 +428,7 @@
 
                 const producto = {
                     id: self.idProducto,
-                    nombreProducto: self.nombreProducto,
+                    nombreProducto: self.nombre,
                     descripcion: self.descripcion,
                     stock: self.stock,
                     precio: self.precio,
