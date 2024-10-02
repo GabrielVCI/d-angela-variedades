@@ -4,7 +4,7 @@ function agregarNuevoProducto() {
         new productoElementoListadoViewModel(
             {
                 idProducto: 0,
-                NombreProducto: '',
+                nombreProducto: '',
                 precio: '',
                 stock: '',
                 descripcion: '',
@@ -107,6 +107,7 @@ async function guardarProducto(producto) {
 async function ObtenerProductos() {
 
     productosListadoViewModel.cargando(true);
+
     const respuesta = await fetch(urlProductos, {
 
         method: 'GET',
@@ -122,7 +123,7 @@ async function ObtenerProductos() {
 
     const json = await respuesta.json();
     productosListadoViewModel.productos([]);
-
+    
     json.forEach(producto => {
         const viewModel = new productoElementoListadoViewModel(producto);
         productosListadoViewModel.productos.push(viewModel);
@@ -135,4 +136,56 @@ function focusOutProductos() {
 
     productosListadoViewModel.productos.pop();
  
+}
+
+async function obtenerCategoria(categoriaId) {
+
+    try {
+        const response = await fetch(`${urlCategorias}/${categoriaId}`, {
+            method: 'GET',
+
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            manejarErrorApi(response);
+            return;
+        }
+
+        const json = await response.json();
+         
+        return json.nombre;
+    }
+
+    catch (error) {
+        manejarErrorApi(error);
+        return;
+    }
+}
+
+async function obtenerSubcategoria(subcategoriaId) {
+
+    try {
+        const response = await fetch(`${urlSubategorias}/${subcategoriaId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            manejarErrorApi(response);
+            return;
+        }
+
+        const json = await response.json(); 
+        return json.name;
+    }
+
+    catch (error) {
+        manejarErrorApi(error);
+        return;
+    }
 }

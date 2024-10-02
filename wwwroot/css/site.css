@@ -330,10 +330,13 @@ body {
 
 .table-trows th{
     font-weight: normal;
+     
+    font-size: 20px;
 }
 
 .table-body tr td {
-    font-weight: lighter;
+    font-weight:400;
+    font-size: 18px;
 }
 
 .error-producto{

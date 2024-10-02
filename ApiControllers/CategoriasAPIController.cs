@@ -21,7 +21,6 @@ namespace d_angela_variedades.API
             this.serviciosUsuarios = serviciosUsuarios;
         }
 
-
         [HttpGet]
         public async Task<List<Categoria>> Get()
         {
