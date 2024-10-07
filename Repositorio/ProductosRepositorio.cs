@@ -31,11 +31,55 @@ namespace d_angela_variedades.Repositorio
             return await Save();
         }
 
+        public async Task<bool> EditarProducto(ProductosDTO productosDTO, Guid productoId)
+        {
+            var producto = await context.Productos.FirstOrDefaultAsync(p => p.IdProducto == productoId);
+
+            if (producto is null)
+            {
+                return false;
+            }
+
+            producto.Nombre = productosDTO.Nombre;
+            producto.Descripcion = productosDTO.Descripcion;
+            producto.Stock = productosDTO.Stock;
+            producto.Precio = productosDTO.Precio;
+            producto.IdCategoria = productosDTO.IdCategoria;
+            producto.IdSubCategoria = productosDTO.IdSubCategoria;
+
+            context.Update(producto);
+
+            return await Save();
+
+        }
+
         public async Task<List<Productos>> ObtenerListadoProductos(int empresaId)
         {
             var productos = await context.Productos.Where(p => p.EmpresaId == empresaId).ToListAsync();
 
             return productos;
+        }
+
+        public async Task<Productos> ObtenerProducto(Guid productoId, int empresaId)
+        {
+            var producto = await context.Productos
+                .FirstOrDefaultAsync(prod => prod.IdProducto == productoId && prod.EmpresaId == empresaId);
+
+            return producto;
+        }
+
+        public async Task<bool> ProductoExiste(Guid productoId)
+        {
+            var productoExiste = await context.Productos.AnyAsync(prod => prod.IdProducto == productoId);
+
+            return productoExiste;
+        }
+
+        public async Task<bool> ProductoPerteneceAlaEmpresa(Guid productoId, int empresaId)
+        {
+            var productoPerteneceAlaEmpresa = await context.Productos.AnyAsync(prod => prod.IdProducto == productoId && prod.EmpresaId == empresaId);
+
+            return productoPerteneceAlaEmpresa;
         }
 
         public async Task<bool> Save()

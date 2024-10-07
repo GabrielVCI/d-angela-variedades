@@ -1,5 +1,6 @@
 ﻿using d_angela_variedades.Data;
 using d_angela_variedades.Entidades;
+using d_angela_variedades.Migrations;
 using System.Reflection;
 
 namespace d_angela_variedades.Interfaces
@@ -13,5 +14,6 @@ namespace d_angela_variedades.Interfaces
         Task<bool> SubcategoriaPerteneceAlaCategoria(int categoriaId, int subcategoria);
         Task<bool> SubCategoriaExiste(string nombreSubcategoria);
         Task<Subcategoria> ObtenerSubcategoria(int subcategoriaId);
+        Task<List<Subcategoria>> ObtenerSubcategoriasDeUnaCategoria(int categoriaId);    
     }
 }

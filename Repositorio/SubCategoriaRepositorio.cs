@@ -54,6 +54,13 @@ namespace d_angela_variedades.Repositorio
             return subcategoria;
         }
 
+        public async Task<List<Subcategoria>> ObtenerSubcategoriasDeUnaCategoria(int categoriaId)
+        {
+            var subcategorias = await context.Subategorias.Where(subcat => subcat.IdCategoria == categoriaId).ToListAsync();
+
+            return subcategorias;
+        }
+
         public async Task<bool> Save()
         {
             var save = await context.SaveChangesAsync();
