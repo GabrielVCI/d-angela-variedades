@@ -35,23 +35,24 @@ async function ObtenerCategorias() {
     }
 
     catch (error) {
+       
         manejarErrorApi(error);
     }
 }
 
 
 async function ObtenerSubcategorias(categoriaId) {
-
+     
     try {
-        const response = await fetch(`${urlSubcategorias}/${categoriaId}`, {
+        const response = await fetch(`${urlSubategorias}/${categoriaId}/subcategorias`, {
 
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
         });
-
-        if (!response.ok) {
+        
+        if (!response.ok) { 
             manejarErrorApi(response);
             return;
         }
@@ -99,6 +100,7 @@ async function guardarProducto(producto) {
         MensajeDeExito("El producto ha sido agregado");
 
     } catch (error) {
+
         manejarErrorApi(error);
         return;
     }
@@ -185,6 +187,102 @@ async function obtenerSubcategoria(subcategoriaId) {
     }
 
     catch (error) {
+        manejarErrorApi(error);
+        return;
+    }
+}
+
+
+async function obtenerProductoAEditar(producto) {
+    
+
+    try {
+
+        const response = await fetch(`${urlProductos}/${producto.idProducto()}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            manejarErrorApi(response);
+             
+            return;
+        }
+        const json = await response.json();
+
+        productoEditarViewModel.idProducto = json.idProducto;
+        productoEditarViewModel.nombre(json.nombre);
+        productoEditarViewModel.descripcion(json.descripcion);
+        productoEditarViewModel.stock(json.stock);
+        productoEditarViewModel.precio(json.precio);
+        productoEditarViewModel.idCategoria(json.idCategoria);
+        productoEditarViewModel.idSubCategoria(json.idSubCategoria);
+
+        //This is important, we need to set the category first
+        // Set category
+        productoEditarViewModel.categoria(json.idCategoria);
+
+        //And then load the municipios
+        // Load the municipalities for the selected province
+        await productoEditarViewModel.loadSubcategorias(json.idCategoria);
+
+        //AND THEN set the municipio
+        //Set municipio after the municipalities have been loaded
+        productoEditarViewModel.subcategoria(json.idSubCategoria); 
+        modalEditarProductoBSTP.show();
+
+    } catch (error) {
+        manejarErrorApi(error);
+        return;
+    }
+    
+}
+
+
+async function editarProducto(producto) {
+
+    try {
+
+        completandoAccionTimer();
+
+        const object = {
+            "Nombre": producto.nombreProducto,
+            "Stock": producto.stock,
+            "Precio": producto.precio,
+            "Descripcion": producto.descripcion,
+            "IdSubCategoria": producto.subcategoria,
+            "idCategoria": producto.categoria
+        }
+
+ 
+        const data = JSON.stringify(object);
+   
+        const response = await fetch(`${urlProductos}/${producto.id}`, {
+            method: "PUT",
+            body: data,
+            headers: {
+                'Content-Type': "application/json"
+            }
+
+         });
+
+        
+        if (!response.ok) {
+            manejarErrorApi(response);
+            return;
+        }
+
+        const json = response.json();
+        mensajeExitoAccionCompletada("¡El producto ha sido editado correctamente!");
+        await ObtenerProductos();
+        modalEditarProductoBSTP.hide();
+        return json;
+
+
+    } catch (error) {
+         
         manejarErrorApi(error);
         return;
     }

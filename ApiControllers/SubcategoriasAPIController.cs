@@ -125,5 +125,31 @@ namespace d_angela_variedades.ApiControllers
 
             return Ok(subcategoria);
         }
+
+        [HttpGet("{categoriaId:int}/subcategorias")]
+        public async Task<ActionResult<List<Subcategoria>>> GetSubcategorias(int categoriaId)
+        {
+            var usuarioId = servicioUsuario.ObtenerUsuarioId();
+
+            var empresaId = await usuariosRepositorio.ObtenerEmpresaUsuarioId(usuarioId);
+
+            var categoriaExiste = await categoriasRepositorio.CategoriaExiste(categoriaId);
+
+            if(!categoriaExiste)
+            {
+                return StatusCode(404, "Categoria no encontrada");
+            }
+
+            var categoriaPertenceAlaEmpresa = await categoriasRepositorio.CategoriaPerteneceAlaEmpresa(empresaId, categoriaId);
+
+            if (!categoriaPertenceAlaEmpresa)
+            {
+                return StatusCode(400, "La categoria no pertenece a la empresa");
+            }
+
+            var subcategorias = await subCategoriaRepositorio.ObtenerSubcategoriasDeUnaCategoria(categoriaId);
+
+            return subcategorias;
+        }
     }
 }

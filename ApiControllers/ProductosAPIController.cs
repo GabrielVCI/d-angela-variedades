@@ -34,6 +34,18 @@ namespace d_angela_variedades.ApiControllers
             return productos;
         }
 
+        [HttpGet("{productoId:Guid}")]
+        public async Task<Productos> Get(Guid productoId)
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+
+            var empresaId = await usuariosRepositorio.ObtenerEmpresaUsuarioId(usuarioId);
+
+            var producto = await productosRepositorio.ObtenerProducto(productoId, empresaId);
+
+            return producto;
+        }
+
         [HttpPost]
         public async Task<ActionResult<Productos>> Post([FromBody] ProductosDTO productosDTO)
         {
@@ -70,6 +82,37 @@ namespace d_angela_variedades.ApiControllers
 
             return Ok();
 
+        }
+
+        [HttpPut("{productoId:Guid}")]
+        public async Task<ActionResult<Subcategoria>> Put([FromBody] ProductosDTO productosDTO, Guid productoId)
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+
+            var empresaId = await usuariosRepositorio.ObtenerEmpresaUsuarioId(usuarioId);
+
+            var productoExiste = await productosRepositorio.ProductoExiste(productoId);
+
+            if(!productoExiste)
+            {
+                return StatusCode(404, "El producto no existe");
+            }
+
+            var productoPerteneceAlaEmpresa = await productosRepositorio.ProductoPerteneceAlaEmpresa(productoId, empresaId);
+
+            if (!productoPerteneceAlaEmpresa)
+            {
+                return StatusCode(403, "No puedes editar este producto porque no pertenece a tu empresa");
+            }
+
+            var producto = await productosRepositorio.EditarProducto(productosDTO, productoId);
+
+            if (!producto)
+            {
+                return StatusCode(500, "Error al guardar el producto");
+            }
+
+            return Ok();
         }
     }
 }

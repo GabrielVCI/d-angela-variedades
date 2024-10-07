@@ -133,6 +133,7 @@
                         <th scope="col">NOMBRE</th>
                         <th scope="col">PRECIO</th>
                         <th scope="col">DESCRIPCIÓN</th>
+                        <th scope="col">STOCK</th>
                         <th scope="col">CATEGORÍA</th>
                         <th scope="col">SUBCATEGORÍA</th>
                         <th scope="col">ACCIONES</th>
@@ -155,6 +156,9 @@
                             <span data-bind="text: descripcion"></span>
                         </td>
                         <td>
+                            <span data-bind="text: stock"></span>
+                        </td>
+                        <td>
                             <span data-bind="text: nombreCategoria"></span>
                         </td>
                         <td>
@@ -166,7 +170,7 @@
                                     <i class="bi bi-eye-fill" style="color: green"></i>
                                 </button>
                                 <button>
-                                    <i class="bi bi-pencil" style="color: blue"></i>
+                                    <i class="bi bi-pencil" data-bind="click: obtenerProductoAEditar" style="color: blue"></i>
                                 </button>
                                 <button>
                                     <i class="bi bi-trash" style="color: red"></i>
@@ -189,9 +193,9 @@
             </div>
         </div>
    </div>
-
-       
 </div>
+
+<partial name="_ModalEditarProducto"></partial>
 
 @section Scripts{
 
@@ -204,6 +208,9 @@
         const urlCategorias = "/api/categorias";
         const urlSubategorias = "/api/subcategorias";
         const urlProductos = "/api/productos";
+
+        const modalEditarProducto = document.getElementById('editar-producto');
+        const modalEditarProductoBSTP = new bootstrap.Modal(modalEditarProducto);
 
         //Validaciones para los campos vacios y los mensajes de error
         ko.validation.init({
@@ -288,7 +295,6 @@
 
             self.categoriasSeleccion = ko.observableArray([]);
             self.subcategoriasSeleccion = ko.observableArray([]);
-
 
             self.esNuevo = ko.pureComputed(function () {
                 return self.idProducto() == 0;
@@ -441,8 +447,210 @@
             }
         }
 
+        const productoEditarViewModel = {
+
+            maxLengthNombreProducto: 20,
+            maxLengthDescripcion: 20,
+
+            idProducto: 0,
+
+            idCategoria: ko.observable(''),
+            idSubCategoria: ko.observable(''),
+
+            nombre: ko.observable('').extend({
+                required: {
+                    message: "Este campo es requerido"
+                }
+            }),
+
+            descripcion: ko.observable('').extend({
+                required: {
+                    message: "Este campo es requerido"
+                }
+            }),
+
+            precio: ko.observable('').extend({
+                required: {
+                    message: "Este campo es requerido"
+                },
+                maxLength: { params: 5, message: "Para agregar este precio, comuníquese con el administrador" },
+                number: { message: "Solo números" }
+            }),
+
+            stock: ko.observable('').extend({
+                required: {
+                    message: "Este campo es requerido"
+                },
+                maxLength: { params: 5, message: "Para agregar más productos, comuníquese con el administrador" },
+                number: { message: "Solo números" }
+            }),
+
+            initializing: ko.observable(true), // Add a flag for initial load
+
+            categoria: ko.observable(''),
+            subcategoria: ko.observable(''),
+            categoriasData: ko.observableArray([]),
+            subcategoriasData: ko.observableArray([]),
+ 
+            categoriasSeleccion: ko.observableArray([]),
+            subcategoriasSeleccion: ko.observableArray([]),
+
+            //Async function to load data into the observable array
+            loadCategoriasData: async function () {
+                try {
+                    const data = await ObtenerCategorias();
+                    
+                    if (data) {
+                        self.categoriasSeleccion(data);
+                        return data;
+                    } else {
+                        console.error("Error al cargar las categorias");
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            },
+              
+
+            //Price that we display in each property, correctly formated.
+            formatPrice: ko.pureComputed({
+                read: function () {
+                    if (self.precio() !== undefined) {
+                        return self.precio().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    } else {
+                        return '';
+                    }
+                },
+                write: function (value) {
+                    self.precio(value.replace(/,/g, ''));
+                }
+            }),
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input DESCRIPTION
+            charCountNombreProducto: ko.pureComputed(function () {
+                return productoEditarViewModel.nombre() ? productoEditarViewModel.nombre().length : '0';
+            }),
+
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input DIRECCION
+            charCountDescripcion: ko.pureComputed(function () {
+                return productoEditarViewModel.descripcion() ? productoEditarViewModel.descripcion().length : '0';
+            }),
+
+            enforceMaxNombreLength: function (data, event) {
+                var input = event.target.value;
+                if (input.length > productoEditarViewModel.maxLengthNombreProducto) {
+                    event.target.value = input.substring(0, productoEditarViewModel.maxLengthNombreProducto);
+                    productoEditarViewModel.nombre(input.substring(0, productoEditarViewModel.maxLengthNombreProducto));
+                } else {
+                    productoEditarViewModel.nombre(input);
+                }
+            },
+
+            enforceMaxLengthDescripcion: function (data, event) {
+                var input = event.target.value;
+                if (input.length > productoEditarViewModel.maxLengthDescripcion) {
+                    event.target.value = input.substring(0, productoEditarViewModel.maxLengthDescripcion);
+                    productoEditarViewModel.descripcion(input.substring(0, productoEditarViewModel.maxLengthDescripcion));
+                } else {
+                    productoEditarViewModel.descripcion(input);
+                }
+            },
+
+            categoriasData: async function () {
+
+                try {
+                    const data = await ObtenerCategorias();
+                   
+                    if (!data) {
+                        console.error("Error cargando las categorias");
+                        return;
+                    }
+
+                    this.categoriasSeleccion(data);
+
+                    if (this.categoria()) {
+                        await this.loadSubcategorias(this.categoria());
+                        
+                    }
+
+                    return data;
+
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            },
+
+            loadSubcategorias: async function (categoriaId) {
+                try {
+                    const data = await ObtenerSubcategorias(categoriaId);
+                    
+                    if (data) {
+                        this.subcategoriasSeleccion(data);
+                    } else {
+                        console.error("Failed to load municipios.");
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            },
+
+            enviandoProducto: ko.observable(false),
+
+            manejarSubmitEditarProducto: async function () {
+
+                var errors = ko.validation.group(this);
+
+        
+                if (errors().length > 0) {
+                    errors.showAllMessages();
+                    this.enviandoProducto(false);
+                     return;
+                }
+
+                //If the submit button is pressed, enviandoPropiedad is true and the button will be disabled
+                if (this.enviandoProducto()) {
+                    return;
+                }
+
+                this.enviandoProducto(true);
+
+                const producto = {
+                    id: this.idProducto,
+                    nombreProducto: this.nombre(),
+                    descripcion: this.descripcion(),
+                    stock: this.stock(),
+                    precio: this.precio(),
+                    categoria: this.categoria(),
+                    subcategoria: this.subcategoria()
+                }
+
+                await editarProducto(producto);
+                this.enviandoProducto(false);
+            }
+        }
+
+        // Ensure the context of 'this' is maintained in asynchronous functions
+        productoEditarViewModel.categoriasData = productoEditarViewModel.categoriasData.bind(productoEditarViewModel);
+        productoEditarViewModel.loadSubcategorias = productoEditarViewModel.loadSubcategorias.bind(productoEditarViewModel);
+
+        // Subscribe to changes in the selected province
+        productoEditarViewModel.categoria.subscribe(function (categoriasSeleccionada) {
+            if (productoEditarViewModel.initializing()) {
+                return;
+            }
+            if (categoriasSeleccionada) {
+                productoEditarViewModel.loadSubcategorias(categoriasSeleccionada);
+            }
+        });
+
+        // Initial load of provinces data
+        productoEditarViewModel.categoriasData().then(() => {
+            productoEditarViewModel.initializing(false);
+        });
+
         const productosListadoViewModel = new ListadoProductosViewModelFn();
         ko.applyBindings(productosListadoViewModel, document.getElementById('producto-listado-contenedor'));
+        ko.applyBindings(productoEditarViewModel, document.getElementById('editar-producto'));
         ObtenerProductos();
     </script>
 }
