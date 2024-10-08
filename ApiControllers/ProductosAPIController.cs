@@ -114,5 +114,35 @@ namespace d_angela_variedades.ApiControllers
 
             return Ok();
         }
+
+        [HttpDelete("{productoId:Guid}")]
+        public async Task<ActionResult> Delete(Guid productoId)
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+
+            var empresaId = await usuariosRepositorio.ObtenerEmpresaUsuarioId(usuarioId);
+
+            var productoExiste = await productosRepositorio.ProductoExiste(productoId);
+            if (!productoExiste) 
+            {
+                return StatusCode(404, "El producto no ha sido encontrado.");
+            }
+
+            var productoPertenceAlaEmpresa = await productosRepositorio.ProductoPerteneceAlaEmpresa(productoId, empresaId);
+            if (!productoPertenceAlaEmpresa)
+            {
+                return StatusCode(400, "El producto no pertenece a la empresa");
+            }
+
+            var elimacionDelProducto = await productosRepositorio.EliminarProducto(productoId);
+
+            if(!elimacionDelProducto)
+            {
+                return StatusCode(500, "Ha ocurrido un error al intentar eliminar el producto");
+            }
+
+            return Ok();
+        }
+
     }
 }

@@ -12,5 +12,6 @@ namespace d_angela_variedades.Interfaces
         Task<bool> ProductoExiste(Guid productoId);
         Task<bool> ProductoPerteneceAlaEmpresa(Guid productoId, int empresaId);
         Task<bool> EditarProducto(ProductosDTO productosDTO, Guid productoId);
+        Task<bool> EliminarProducto(Guid productoId);
     }
 }
