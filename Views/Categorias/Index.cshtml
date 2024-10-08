@@ -13,7 +13,7 @@
                     Este apartado es para que registres los productos de tu negocio, 
                     de una forma ordenada, diviéndolos en categorías y subcategorías para una fácil clasificación.                        </p>
                     <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
-                        <button class="btn btn-primary btn-lg px-4 me-sm-3" onclick="agregarNuevoProducto()">Agregar Producto</button>
+                        <a class="btn btn-primary btn-lg px-4 me-sm-3" asp-controller="Productos" asp-action="Productos">Ver Mis Productos</a>
                         <button class="btn btn-outline-light btn-lg px-4" onclick="agregarNuevaCategoria()">Crear Categoría</button>
                     </div>
                 </div>
@@ -53,9 +53,7 @@
                             </div>
 
                             <div class="col-lg-3 d-flex justify-content-around align-items-center">
-                                <button class="btn btn-primary w-40">
-                                    <i class="bi bi-list"></i>
-                                </button>
+               
                                 <button data-bind="click: ObtenerCategoriaParaEditar" class="btn btn-secondary w-40">
                                     <i class="bi bi-pencil"></i>
                                 </button>
@@ -81,9 +79,7 @@
                                     </p>
 
                                     <div class="">
-                                        <button class="btn btn-primary">
-                                            <i class="bi bi-card-checklist"></i>
-                                        </button>
+                  
                                         <button class="btn btn-secondary" data-bind="click: ObtenerSubCategoriaParaEditar">
                                             <i class="bi bi-pencil"></i>
                                         </button>

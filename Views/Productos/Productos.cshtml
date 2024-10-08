@@ -21,18 +21,22 @@
 
     <div class="products-actions-container">
          
-        <div class="buscador-filtro">
+        <div class="buscador-filtro" id="filtro-basico">
             <button class="btn button-filtrar-producto me-4">Filtro
                 <i class="bi bi-filter" style="font-size: 15px;"></i>
              </button>
-            <form class="d-flex">
+            <form class="d-flex" data-bind="submit: manejarFiltroPorNombre">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control buscador-producto" placeholder="Nombre del producto">
-                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                    <input type="text" class="form-control buscador-producto" data-bind="value: nombreProductoFiltro" placeholder="Nombre del producto">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
                         <i class="bi bi-search"></i>
                     </button>
                 </div>
             </form>
+
+            <button class="reload-productos" data-bind="click: ObtenerProductos">
+                <i class="bi bi-arrow-clockwise"></i>
+            </button> 
         </div>
         <div class="crear-producto-btn-container">
             <button class="button-agregar-producto" onclick="agregarNuevoProducto()">Agregar Producto</button>
@@ -246,6 +250,22 @@
                 }
                 return self.productos().length === 0;
             });
+        }
+
+        //This is the function we use to bind the data in the view and list it.
+        function FiltroBasicoPropiedadesViewModelFn() {
+
+            var self = this;
+            self.nombreProductoFiltro = ko.observable('');
+
+
+            self.manejarFiltroPorNombre = async function (){
+
+                await obtenerProductosConElNombre(self.nombreProductoFiltro());
+
+            }
+
+            self.cargar
         }
 
         //This function is use to get each element to push it into the list. We pass all the properties
@@ -653,8 +673,11 @@
         });
 
         const productosListadoViewModel = new ListadoProductosViewModelFn();
+        const filtroProductosListadoVM = new FiltroBasicoPropiedadesViewModelFn();
+
         ko.applyBindings(productosListadoViewModel, document.getElementById('producto-listado-contenedor'));
         ko.applyBindings(productoEditarViewModel, document.getElementById('editar-producto'));
+        ko.applyBindings(filtroProductosListadoVM, document.getElementById('filtro-basico'));
         ObtenerProductos();
     </script>
 }

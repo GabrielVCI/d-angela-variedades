@@ -1,7 +1,9 @@
 ﻿using d_angela_variedades.Data;
 using d_angela_variedades.Entidades;
 using d_angela_variedades.Interfaces;
+using d_angela_variedades.Repositorio;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
 
 namespace d_angela_variedades.ApiControllers
 {
@@ -44,6 +46,36 @@ namespace d_angela_variedades.ApiControllers
             var producto = await productosRepositorio.ObtenerProducto(productoId, empresaId);
 
             return producto;
+        }
+
+        [HttpGet("obtenerProductosPorElNombre")]
+        public async Task<ActionResult<List<Productos>>> Get([FromQuery] string? nombre)
+        {
+            if (string.IsNullOrEmpty(nombre))
+            {
+                return StatusCode(400, "Error");
+            }
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+
+            var empresaId = await usuariosRepositorio.ObtenerEmpresaUsuarioId(usuarioId);
+
+            var productoExiste = await productosRepositorio.ProductoExistePorNombre(nombre);
+
+            if (!productoExiste)
+            {
+                return StatusCode(404, "No existen productos con este nombre");
+            }
+
+            var productosPertenecenAlaEmpresa = await productosRepositorio.ProductoPerteneceAlaEmpresaPorNombre(nombre, empresaId);
+
+            if (!productosPertenecenAlaEmpresa)
+            {
+                return StatusCode(400, "No se pueden obtener los productos");
+            }
+
+            var productosPorNombre = await productosRepositorio.ListadoProductosPorNombre(nombre);
+
+            return productosPorNombre;
         }
 
         [HttpPost]
