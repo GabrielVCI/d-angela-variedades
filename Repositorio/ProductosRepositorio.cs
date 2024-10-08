@@ -65,6 +65,13 @@ namespace d_angela_variedades.Repositorio
             return await Save();
         }
 
+        public async Task<List<Productos>> ListadoProductosPorNombre(string nombreProducto)
+        {
+            var listadoProductos = await context.Productos.Where(prod => prod.Nombre ==  nombreProducto).ToListAsync();
+
+            return listadoProductos;
+        }
+
         public async Task<List<Productos>> ObtenerListadoProductos(int empresaId)
         {
             var productos = await context.Productos.Where(p => p.EmpresaId == empresaId).ToListAsync();
@@ -87,11 +94,25 @@ namespace d_angela_variedades.Repositorio
             return productoExiste;
         }
 
+        public async Task<bool> ProductoExistePorNombre(string nombreProducto)
+        {
+            var productoExiste = await context.Productos.AnyAsync(prod => prod.Nombre == nombreProducto);
+
+            return productoExiste;
+        }
+
         public async Task<bool> ProductoPerteneceAlaEmpresa(Guid productoId, int empresaId)
         {
             var productoPerteneceAlaEmpresa = await context.Productos.AnyAsync(prod => prod.IdProducto == productoId && prod.EmpresaId == empresaId);
 
             return productoPerteneceAlaEmpresa;
+        }
+
+        public async Task<bool> ProductoPerteneceAlaEmpresaPorNombre(string nombreProducto, int empresaId)
+        {
+            var productoPertenceAlaEmpresa = await context.Productos.AnyAsync(prod => prod.Nombre == nombreProducto && prod.EmpresaId == empresaId);
+
+            return productoPertenceAlaEmpresa;
         }
 
         public async Task<bool> Save()

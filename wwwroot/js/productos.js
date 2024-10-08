@@ -1,4 +1,4 @@
-﻿
+﻿ 
 function agregarNuevoProducto() {
     productosListadoViewModel.productos.push(
         new productoElementoListadoViewModel(
@@ -325,4 +325,47 @@ function confirmarEliminacionDelProducto(producto) {
 
         text: "Se eliminará de su lista de productos."
     });
+}
+
+async function obtenerProductosConElNombre(nombreProducto) {
+
+    try {
+        if (nombreProducto.trim().length == 0) {
+            return;
+        }
+
+        productosListadoViewModel.cargando(true);
+
+        const parametros = new URLSearchParams({
+            nombre: nombreProducto || ''
+        });
+
+
+        const response = await fetch(`${urlProductos}/obtenerProductosPorElNombre?${parametros}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            response.status == 404 ? mostrarMensajeError("No tienes productos con este nombre") : manejarErrorApi(response);
+            productosListadoViewModel.cargando(false);
+            return;
+        } 
+
+        const json = await response.json();
+        productosListadoViewModel.productos([]);
+         
+        json.forEach(producto => {
+            const viewModel = new productoElementoListadoViewModel(producto);
+            productosListadoViewModel.productos.push(viewModel);
+        });
+         
+        productosListadoViewModel.cargando(false);
+
+    } catch (error) {
+        manejarErrorApi(error);
+        return;
+    }
 }
