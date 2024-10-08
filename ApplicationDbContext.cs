@@ -57,7 +57,11 @@ namespace d_angela_variedades
                     .WithOne(s => s.Categoria)
                     .HasForeignKey(s => s.IdCategoria);
 
-        }
+            builder.Entity<Productos>()
+                    .HasIndex(p => p.CodigoProducto)
+                    .IsUnique();
+
+         }
     }
 
     

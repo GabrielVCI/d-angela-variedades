@@ -8,10 +8,12 @@ namespace d_angela_variedades.Repositorio
     public class ProductosRepositorio : IProductosRepositorio
     {
         private readonly ApplicationDbContext context;
+        private readonly IServicioProductos servicioProductos;
 
-        public ProductosRepositorio(ApplicationDbContext context)
+        public ProductosRepositorio(ApplicationDbContext context, IServicioProductos servicioProductos)
         {
             this.context = context;
+            this.servicioProductos = servicioProductos;
         }
 
         public async Task<bool> AgregarProducto(ProductosDTO producto, int empresaId)
@@ -25,6 +27,7 @@ namespace d_angela_variedades.Repositorio
             nuevoProducto.IdSubCategoria = producto.IdSubCategoria;
             nuevoProducto.IdCategoria = producto.IdCategoria;
             nuevoProducto.EmpresaId = empresaId;
+            nuevoProducto.CodigoProducto = await servicioProductos.GenerarCodigoDeProductoUnico();
 
             context.Add(nuevoProducto);
 
