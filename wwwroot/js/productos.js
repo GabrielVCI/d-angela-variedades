@@ -312,7 +312,7 @@ async function eliminarProducto(producto) {
 }
 function confirmarEliminacionDelProducto(producto) {
 
-    console.log(producto)
+     
     confirmarAction({
         callbackAceptar: () => {
             eliminarProducto(producto);
