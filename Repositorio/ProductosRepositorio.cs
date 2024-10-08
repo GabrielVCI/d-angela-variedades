@@ -56,6 +56,15 @@ namespace d_angela_variedades.Repositorio
 
         }
 
+        public async Task<bool> EliminarProducto(Guid productoId)
+        {
+            var producto = await context.Productos.FirstOrDefaultAsync(prod => prod.IdProducto == productoId);
+
+            context.Remove(producto);
+
+            return await Save();
+        }
+
         public async Task<List<Productos>> ObtenerListadoProductos(int empresaId)
         {
             var productos = await context.Productos.Where(p => p.EmpresaId == empresaId).ToListAsync();

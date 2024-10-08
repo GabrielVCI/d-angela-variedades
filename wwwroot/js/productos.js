@@ -286,3 +286,43 @@ async function editarProducto(producto) {
         return;
     }
 }
+
+async function eliminarProducto(producto) {
+
+    try {
+        completandoAccionTimer();
+
+        const response = await fetch(`${urlProductos}/${producto.idProducto()}`, {
+
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            manejarErrorApi(response);
+            return;
+        }
+
+        productosListadoViewModel.productos.remove(function (prod) { return prod.id == producto.idProducto });
+        MensajeDeExito();
+        ObtenerProductos();
+    } catch (error) {
+        manejarErrorApi(error);
+        return;
+    }
+}
+function confirmarEliminacionDelProducto(producto) {
+
+    console.log(producto)
+    confirmarAction({
+        callbackAceptar: () => {
+            eliminarProducto(producto);
+        },
+        callbackCancelar: () => {
+            return;
+        },
+
+        titulo: `¿Desea borrar el producto ${producto.nombre()}?`,
+
+        text: "Se eliminará de su lista de productos."
+    });
+}

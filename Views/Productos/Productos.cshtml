@@ -144,7 +144,7 @@
                     
                     <tr>
                         <td>
-                            <span data-bind="text: nombre"></span>
+                            <span data-bind="text: codigoProducto"></span>
                         </td>
                         <td>
                             <span data-bind="text: nombre"></span>
@@ -173,7 +173,7 @@
                                     <i class="bi bi-pencil" data-bind="click: obtenerProductoAEditar" style="color: blue"></i>
                                 </button>
                                 <button>
-                                    <i class="bi bi-trash" style="color: red"></i>
+                                    <i class="bi bi-trash" data-bind="click: confirmarEliminacionDelProducto" style="color: red"></i>
                                 </button>
                             </div>
                         </td>
@@ -247,7 +247,7 @@
         //This function is use to get each element to push it into the list. We pass all the properties
         //of one property
         function productoElementoListadoViewModel
-                ({ idProducto, nombre, precio, stock, descripcion, categoria, subcategoria, idCategoria, idSubCategoria }) {
+            ({ idProducto, nombre, precio, stock, descripcion, categoria, subcategoria, idCategoria, idSubCategoria, codigoProducto }) {
 
             var self = this;
              
@@ -255,7 +255,7 @@
             let maxLengthDescripcion = 20;
  
             self.idProducto = ko.observable(idProducto);
-
+            self.codigoProducto = ko.observable(codigoProducto);
             self.idCategoria = ko.observable(idCategoria);
             self.idSubCategoria = ko.observable(idSubCategoria);
 
