@@ -194,8 +194,7 @@ async function obtenerSubcategoria(subcategoriaId) {
 
 
 async function obtenerProductoAEditar(producto) {
-    
-
+   
     try {
 
         const response = await fetch(`${urlProductos}/${producto.idProducto()}`, {

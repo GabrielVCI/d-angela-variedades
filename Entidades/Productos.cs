@@ -12,5 +12,6 @@
         public Subcategoria Subcategoria { get; set; }
         public int IdSubCategoria { get; set; }
         public int EmpresaId { get; set; }
+        public int CodigoProducto { get; set; }
     }
 }
