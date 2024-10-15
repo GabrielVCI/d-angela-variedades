@@ -417,6 +417,6 @@ async function filtrarProductos(objetoFiltro) {
         modalFiltrarProductoBSTP.hide();
 
     } catch (error) {
-        console.log(error);
+        manejarErrorApi(error);
     }
 }
