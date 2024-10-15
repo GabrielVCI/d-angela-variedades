@@ -369,3 +369,54 @@ async function obtenerProductosConElNombre(nombreProducto) {
         return;
     }
 }
+
+
+async function filtrarProductos(objetoFiltro) {
+      
+    try {
+        productosListadoViewModel.cargando(true); 
+        const params = new URLSearchParams({
+
+            nombreProducto: objetoFiltro.nombre || "",
+            precio: objetoFiltro.precio || 0,
+            stock: objetoFiltro.stock || 0,
+            categoriaId: objetoFiltro.categoriaId || 0,
+            subcategoriaId: objetoFiltro.subcategoriaId || 0
+
+        });
+
+        const response = await fetch(`${urlProductos}/filtrarProductos?${params}`, {
+
+            method: "GET",
+            headers: {
+                'Content-Type': "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            productosListadoViewModel.cargando(false);
+            if (response.status === 404) {
+                mostrarMensajeError("No tienes productos guardados con estas características");
+                return;
+            }
+            manejarErrorApi(response); 
+            return;
+        }
+
+         
+        const json = await response.json();
+ 
+        productosListadoViewModel.productos([]);
+
+        json.forEach(producto => {
+            const viewModel = new productoElementoListadoViewModel(producto); 
+            productosListadoViewModel.productos.push(viewModel);
+        });
+
+        productosListadoViewModel.cargando(false);
+        modalFiltrarProductoBSTP.hide();
+
+    } catch (error) {
+        console.log(error);
+    }
+}

@@ -16,5 +16,6 @@ namespace d_angela_variedades.Interfaces
         Task<bool> ProductoExistePorNombre(string nombreProducto);
         Task<bool> ProductoPerteneceAlaEmpresaPorNombre(string nombreProducto, int empresaId);
         Task<List<Productos>> ListadoProductosPorNombre(string nombreProducto);
+        Task<List<Productos>> ListadoProductosFiltrados(string? nombreProducto, int? precio, int? stock, int? categoriaId, int? subcategoriaId, int empresaId);
     }
 }

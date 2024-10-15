@@ -22,7 +22,8 @@
     <div class="products-actions-container">
          
         <div class="buscador-filtro" id="filtro-basico">
-            <button class="btn button-filtrar-producto me-4">Filtro
+            <button class="btn button-filtrar-producto me-4" data-bs-toggle="modal" data-bs-target="#filtrar-producto">
+                Filtro
                 <i class="bi bi-filter" style="font-size: 15px;"></i>
              </button>
             <form class="d-flex" data-bind="submit: manejarFiltroPorNombre">
@@ -203,7 +204,8 @@
 
 
 
-<partial name="_ModalEditarProducto"></partial>
+<partial name="_ModalEditarProducto" />
+<partial name="_ModalFiltroProducto" />
 
 @section Scripts{
 
@@ -219,6 +221,8 @@
 
         const modalEditarProducto = document.getElementById('editar-producto');
         const modalEditarProductoBSTP = new bootstrap.Modal(modalEditarProducto);
+        const modalFiltrarProducto = document.getElementById('filtrar-producto');
+        const modalFiltrarProductoBSTP = new bootstrap.Modal(modalFiltrarProducto);
 
         //Validaciones para los campos vacios y los mensajes de error
         ko.validation.init({
@@ -257,15 +261,90 @@
 
             var self = this;
             self.nombreProductoFiltro = ko.observable('');
-
-
             self.manejarFiltroPorNombre = async function (){
-
                 await obtenerProductosConElNombre(self.nombreProductoFiltro());
+            }
+             
+        }
 
+        //This is the function we use to bind the data in the view and list it.
+        function FiltroExtensoPropiedadesViewModelFn() {
+
+            var self = this;
+
+            self.initializing = ko.observable(true);// Add a flag for initial load
+ 
+            self.categoriasData = ko.observableArray([]);
+            self.subcategoriasData = ko.observableArray([]);
+
+  
+            self.codigoProducto = ko.observable('');
+            self.nombreProducto = ko.observable('');
+            self.precio = ko.observable('');
+            self.stock= ko.observable('');
+            self.categoria= ko.observable('');
+            self.subcategoria = ko.observable('');
+             
+            self.nombreProductoFiltro = ko.observable('');
+              
+            self.categoriaSeleccion = ko.observableArray([]);
+            self.subcategoriaSeleccion = ko.observableArray([]);
+
+            // Async function to load data into the observable array
+            self.categoriasData = async function () {
+                try {
+                    const data = await ObtenerCategorias();
+                    if (data) {
+                        console.log(data);
+                        
+                        self.categoriaSeleccion(data);
+                        return data;
+                    } else {
+                        self.message("Failed to load provinces.");
+                    }
+                } catch (error) {
+                    manejarErrorApi("Error", error);
+                }
+            };
+
+            self.manejarFiltroProducto = async function () {
+                
+                const objetoFiltro = {
+                    nombre: self.nombreProducto(),
+                    precio: self.precio(),
+                    stock: self.stock(),
+                    categoriaId: self.categoria(),
+                    subcategoriaId: self.subcategoria()
+                }
+
+                await filtrarProductos(objetoFiltro);
             }
 
-            self.cargar
+            // Initial load
+            self.categoriasData();
+            // Update the selected province observable whenever the selectedProvinceId changes
+            self.categoria.subscribe(async function (categoriaSeleccionada) {
+                if (categoriaSeleccionada) {
+                    try {
+                        console.log(categoriaSeleccionada)
+                        const data = await ObtenerSubcategorias(categoriaSeleccionada);
+
+                        if (data) {
+                            self.subcategoriaSeleccion(data);
+                        } else {
+                            manejarErrorApi("Error");
+                        }
+                    } catch (error) {
+                        manejarErrorApi("Error", error);
+                    }
+                }
+            });
+  
+            self.manejarFiltroPorNombre = async function () {
+                self.nombreProducto("");
+                await obtenerProductosConElNombre(self.nombreProductoFiltro());
+            }
+            
         }
 
         //This function is use to get each element to push it into the list. We pass all the properties
@@ -511,8 +590,8 @@
 
             initializing: ko.observable(true), // Add a flag for initial load
 
-            categoria: ko.observable(''),
-            subcategoria: ko.observable(''),
+            categoria: ko.observable(),
+            subcategoria: ko.observable(),
             categoriasData: ko.observableArray([]),
             subcategoriasData: ko.observableArray([]),
  
@@ -674,10 +753,12 @@
 
         const productosListadoViewModel = new ListadoProductosViewModelFn();
         const filtroProductosListadoVM = new FiltroBasicoPropiedadesViewModelFn();
+        const productoFiltrarViewModel = new FiltroExtensoPropiedadesViewModelFn();
 
         ko.applyBindings(productosListadoViewModel, document.getElementById('producto-listado-contenedor'));
         ko.applyBindings(productoEditarViewModel, document.getElementById('editar-producto'));
         ko.applyBindings(filtroProductosListadoVM, document.getElementById('filtro-basico'));
+        ko.applyBindings(productoFiltrarViewModel, document.getElementById('filtrar-producto'));
         ObtenerProductos();
     </script>
 }

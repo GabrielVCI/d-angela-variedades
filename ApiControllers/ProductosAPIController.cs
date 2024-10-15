@@ -78,6 +78,29 @@ namespace d_angela_variedades.ApiControllers
             return productosPorNombre;
         }
 
+        [HttpGet("filtrarProductos")]
+        public async Task<ActionResult<List<Productos>>> GetProductosFiltrados([FromQuery] string? nombreProducto, int? precio, int? stock, int? categoriaId, int? subcategoriaId)
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+
+            var empresaId = await usuariosRepositorio.ObtenerEmpresaUsuarioId(usuarioId);
+
+            var productos = await productosRepositorio.ListadoProductosFiltrados(nombreProducto,  precio, stock, categoriaId,  subcategoriaId, empresaId);
+
+            if (productos is null)
+            {
+                StatusCode(500, "Error al obtener los productos");
+            }
+
+            if(productos.Count() == 0)
+            {
+                return StatusCode(404, "No existe un producto con esas caracteristicas.");
+            }
+
+            return productos;
+
+        }
+
         [HttpPost]
         public async Task<ActionResult<Productos>> Post([FromBody] ProductosDTO productosDTO)
         {

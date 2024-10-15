@@ -65,6 +65,42 @@ namespace d_angela_variedades.Repositorio
             return await Save();
         }
 
+        public async Task<List<Productos>> ListadoProductosFiltrados(string? nombreProducto, int? precio, int? stock, int? categoriaId, int? subcategoriaId, int empresaId)
+        {
+            //Obtenemos los productos que tengan el mismo Id de la empresa como queryable, lo que nos
+            //permite ir agregandole registros al query mas adelante
+            var productosQuery = context.Productos.Where(prod => prod.EmpresaId == empresaId).AsQueryable();
+
+            if (!string.IsNullOrEmpty(nombreProducto))
+            {
+                productosQuery = productosQuery.Where(prod => prod.Nombre == nombreProducto);
+            }
+
+            if(precio != null && precio > 0)
+            {
+                productosQuery = productosQuery.Where(prod => prod.Precio == precio);
+            }
+
+            if(stock != null && stock > 0)
+            {
+                productosQuery = productosQuery.Where(prod => prod.Stock == stock); 
+            }
+
+            if(categoriaId != null && categoriaId > 0) 
+            {
+                productosQuery = productosQuery.Where(prod => prod.IdCategoria == categoriaId);
+            }
+
+            if (subcategoriaId != null && subcategoriaId > 0)
+            {
+                productosQuery = productosQuery.Where(prod => prod.IdSubCategoria == subcategoriaId);
+            }
+
+            var productosFiltrados = await productosQuery.ToListAsync();
+
+            return productosFiltrados; 
+        }
+
         public async Task<List<Productos>> ListadoProductosPorNombre(string nombreProducto)
         {
             var listadoProductos = await context.Productos.Where(prod => prod.Nombre ==  nombreProducto).ToListAsync();
