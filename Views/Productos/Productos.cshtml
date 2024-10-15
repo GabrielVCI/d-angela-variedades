@@ -294,8 +294,7 @@
             self.categoriasData = async function () {
                 try {
                     const data = await ObtenerCategorias();
-                    if (data) {
-                        console.log(data);
+                    if (data) { 
                         
                         self.categoriaSeleccion(data);
                         return data;
@@ -326,7 +325,8 @@
             self.categoria.subscribe(async function (categoriaSeleccionada) {
                 if (categoriaSeleccionada) {
                     try {
-                        console.log(categoriaSeleccionada)
+                      
+
                         const data = await ObtenerSubcategorias(categoriaSeleccionada);
 
                         if (data) {
