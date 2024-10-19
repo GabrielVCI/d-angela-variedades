@@ -3,65 +3,7 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-
-@* <div class="presentation-container">
-
-    <div class="presentation">
-        <h2 class="presentation-title">@Model.NombreEmpresa</h2>
-
-        <p>Administra tu negocio con nosotros y se parte de una comunidad comprometida con el exito y la productividad.</p>
-
-        <div class="btn-presentation-container">
-            <a class="btn btn-primary">Ver productos</a>
-            <a class="btn btn-outline-light">Ver ganancias</a>
-        </div>
-    </div>
-
-
-    <div class="logo-image">
-        <img src="@Url.Content($"~/LogoEmpresa/{Model.LogoURL}")" class="foto-perfil"
-             data-image-url="@Url.Content($"~/LogoEmpresa/{Model.LogoURL}")" />
-    </div>
-
-</div>
-
-
-<div class="home-page-description-container">
-    <div class="hp-description">
-
-        <h4></h4>
-    </div>
-
-
-    <div class="hp-description">
-        <div class="description">
-            <i></i>
-            <h6></h6>
-            <p></p>
-        </div>        
-        
-        <div class="description">
-            <i></i>
-            <h6></h6>
-            <p></p>
-        </div>        
-        
-        <div class="description">
-            <i></i>
-            <h6></h6>
-            <p></p>
-        </div>        
-        
-        <div class="description">
-            <i></i>
-            <h6></h6>
-            <p></p>
-        </div>
-    </div>
-</div>
-
-
- *@
+ 
 
 <div class="bg-dark py-5 presentation-container">
     <div class="container px-5">
@@ -75,7 +17,7 @@
 
                     <p class="lead fw-normal text-white-50 mb-4">Administra tu negocio con nosotros y se parte de una comunidad comprometida con el éxito y la productividad.</p>
                     <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
-                        <a class="btn btn-primary btn-lg px-4 me-sm-3" href="#features">Ver mis productos</a>
+                        <a class="btn btn-primary btn-lg px-4 me-sm-3" asp-action="Productos" asp-controller="Productos">Ver mis productos</a>
                         <a class="btn btn-outline-light btn-lg px-4" href="#!">Ver mis ganancias</a>
                     </div>
                 </div>

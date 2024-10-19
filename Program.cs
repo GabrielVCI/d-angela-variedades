@@ -58,6 +58,8 @@ builder.Services.AddTransient<IAlmacenadorArchivos, AlmacenadorArchivosLocal>();
 builder.Services.AddTransient<IServiciosUsuarios, ServiciosUsuarios>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddTransient<IServicioProductos, ServicioProductos>();
+builder.Services.AddTransient<IClientesRepositorio, ClientesRepositorio>();
+builder.Services.AddTransient<IGruposRepositorio, GruposRepositorio>();
 
 builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
     options.TokenLifespan = TimeSpan.FromHours(2));

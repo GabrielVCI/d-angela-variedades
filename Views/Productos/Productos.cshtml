@@ -22,7 +22,7 @@
     <div class="products-actions-container">
          
         <div class="buscador-filtro" id="filtro-basico">
-            <button class="btn button-filtrar-producto me-4" data-bs-toggle="modal" data-bs-target="#filtrar-producto">
+            <button class="btn button-filtrar-producto me-4" data-bind="click: limpiarCamposDelFiltro" data-bs-toggle="modal" data-bs-target="#filtrar-producto">
                 Filtro
                 <i class="bi bi-filter" style="font-size: 15px;"></i>
              </button>
@@ -260,6 +260,12 @@
         function FiltroBasicoPropiedadesViewModelFn() {
 
             var self = this;
+ 
+            self.limpiarCamposDelFiltro = async function () {
+                self.stock('');
+                console.log("s")
+                
+            }
             self.nombreProductoFiltro = ko.observable('');
             self.manejarFiltroPorNombre = async function (){
                 await obtenerProductosConElNombre(self.nombreProductoFiltro());
@@ -290,12 +296,12 @@
             self.categoriaSeleccion = ko.observableArray([]);
             self.subcategoriaSeleccion = ko.observableArray([]);
 
+
             // Async function to load data into the observable array
             self.categoriasData = async function () {
                 try {
-                    const data = await ObtenerCategorias();
-                    if (data) { 
-                        
+                    const data = await ObtenerCategorias(); 
+                    if (data) {  
                         self.categoriaSeleccion(data);
                         return data;
                     } else {
@@ -315,18 +321,17 @@
                     categoriaId: self.categoria(),
                     subcategoriaId: self.subcategoria()
                 }
-
+                 
                 await filtrarProductos(objetoFiltro);
+                 
             }
 
             // Initial load
             self.categoriasData();
-            // Update the selected province observable whenever the selectedProvinceId changes
+            // Update the selected subcategory observable whenever the selected category Id changes
             self.categoria.subscribe(async function (categoriaSeleccionada) {
                 if (categoriaSeleccionada) {
-                    try {
-                      
-
+                    try { 
                         const data = await ObtenerSubcategorias(categoriaSeleccionada);
 
                         if (data) {
@@ -335,13 +340,13 @@
                             manejarErrorApi("Error");
                         }
                     } catch (error) {
-                        manejarErrorApi("Error", error);
+                        manejarErrorApi("Error");
                     }
                 }
             });
   
             self.manejarFiltroPorNombre = async function () {
-                self.nombreProducto("");
+          
                 await obtenerProductosConElNombre(self.nombreProductoFiltro());
             }
             

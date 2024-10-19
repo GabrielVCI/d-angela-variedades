@@ -1,0 +1,585 @@
+﻿@{
+    ViewData["Title"] = "Listado de Clientes";
+}
+
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="form-container mb-4">
+        </div>
+        <div class="text-center text-white mb-3">
+            <h1 class="display-4 fw-bolder">Listado de clientes</h1>
+            <p class="lead fw-normal text-white-50 mb-0">
+                Todos los clientes que has registrado en la aplicación.
+            </p>
+        </div>
+    </div>
+</header>
+
+<div class="clientes-container">
+
+    <div class="clientes-actions-container">
+
+        <div class="buscador-filtro" id="filtro-basico-clientes">
+            <button class="btn button-filtrar-producto me-4" >
+                Grupos
+                <i class="bi bi-collection" style="font-size: 15px;"></i> 
+            </button>
+            <form class="d-flex" data-bind="submit: manejarFiltroPorNombre">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control buscador-producto" data-bind="value: nombreClienteFiltro" placeholder="Nombre o teléfono del cliente">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+
+            <button class="reload-productos" data-bind="click: ObtenerClientes">
+                <i class="bi bi-arrow-clockwise"></i>
+            </button>
+        </div>
+        <div class="crear-producto-btn-container">
+            <button class="button-agregar-producto" onclick="agregarNuevoCliente()">Agregar Cliente</button>
+        </div>
+
+    </div>
+
+    <div class="listado-container-tabla-productos" id="cliente-listado-contenedor">
+        <div data-bind="foreach: clientes">
+            @*Formulario para crear un producto*@
+            <div class="form-container" data-bind="visible: esNuevo">
+                <div class="hidden" id="overlay" data-bind="visible: esNuevo"></div>
+
+                <section class="hidden" id="modal-design-cliente" data-bind="visible: esNuevo">
+
+                    <div class="flex">
+                        <h3 class="fw-bold">Agrega un cliente</h3>
+                        <button class="btn btn-close" data-bind="click: focusOutCliente"></button>
+                    </div>
+
+                    <form data-bind="submit: manejarSubmitCliente">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-4">
+                                    <label for="NombreProducto" class="form-label">Nombre del cliente</label>
+                                    <input type="text"
+                                           data-bind="value: nombre, event: { input: enforceMaxLength }"
+                                           class="form-control"
+                                           id="nombre">
+                                    <div><span data-bind="text: charCountNombreCliente"></span>/20</div>
+                                    <div class="error error-producto text-danger" data-bind="validationMessage: nombre"></div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="NombreCategoria" class="form-label">Telefono</label>
+                                    <input type="number"
+                                           data-bind="value: telefono, event: { input: enforceMaxLengthTelefono }" 
+                                           class="form-control"
+                                           id="nombre"
+                                           placeholder="Sin guiones">
+                                    <div><span data-bind="text: charCountTelefonoCliente"></span>/10</div>
+                                    <div class="error error-producto text-danger" data-bind="validationMessage: telefono"></div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="categorias" class="form-label">Grupo</label> <br>
+                                    <select class="custom-select form-select" id="categorias"
+                                            data-bind="options: gruposSeleccion,
+                                                                   optionsText: 'nombre',
+                                                                   value: grupo">
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="NombreCategoria" class="form-label">Nota</label>
+                                    <input type="text"
+                                           data-bind="value: nota, event: { input: enforceMaxLengthNota }"
+                                           class="form-control"
+                                           id="nombre">
+                                    <div><span data-bind="text: charCountNota"></span>/20</div>
+                                    <div class="error error-producto text-danger" data-bind="validationMessage: nota"></div>
+                                </div>
+                            </div> 
+                        </div>
+
+                        <div class="form-agregar-producto">
+                            <button class="button-guardar-producto-agregado" type="submit" data-bind="disabled: enviandoCliente">
+                                Agregar Cliente
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr class="table-trows">
+                        <th scope="col">NOMBRE DEL CLIENTE</th>
+                        <th scope="col">TELEFONO</th>
+                        <th scope="col">GRUPO</th>
+                        <th scope="col">NOTA</th>
+                        
+                        <th scope="col">ACCIONES</th> 
+                    </tr>
+                </thead>
+
+                <tbody class="table-body" data-bind="foreach: clientes">
+
+                    <tr>
+                        <td>
+                            <span data-bind="text: nombre"></span>
+                        </td>
+                        <td>
+                            <span data-bind="text: telefono"></span>
+                        </td>
+                        <td>
+                            <span data-bind="text: grupo"></span>
+                        </td>
+        
+                        <td>
+                            <span data-bind="text: nota"></span>
+                        </td>
+         
+                        <td>
+                            <div class="actions-producto-btn-container">
+                                <button>
+                                    <i class="bi bi-eye-fill" style="color: green"></i>
+                                </button>
+                                <button>
+                                    <i class="bi bi-pencil" data-bind="click: obtenerClienteAEditar" style="color: blue"></i>
+                                </button>
+                                <button>
+                                    <i class="bi bi-trash" data-bind="click: confirmarEliminacionDelCliente" style="color: red"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="categorias-funcionalities">
+            <div data-bind="visible: cargando" class="spinner-border">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+
+            <div data-bind="visible: noHayClientes">
+                <p>No tienes clientes registrados.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="_ModalEditarClienteViewModel" />
+
+@section Scripts{
+
+    <script src="~/js/clientes.js"></script>
+    <script src="~/js/grupos.js"></script>
+    <script src="~/js/utilidades.js"></script>
+
+    <script>
+        const urlClientes = "/api/clientes";
+        const urlCategorias = "/api/productos";
+        const urlSubategorias = "/api/subcategorias";
+        const urlProductos = "/api/productos";
+        const urlGrupos = "/api/grupos";
+
+        //Validaciones para los campos vacios y los mensajes de error
+        ko.validation.init({
+            insertMessages: false,  // Avoid inserting automatic messages
+            decorateInputElement: true,
+            errorElementClass: 'error'
+        }, true);
+
+
+        const modalEditarCliente = document.getElementById('editar-cliente');
+        const modalEditarClienteBSTP = new bootstrap.Modal(modalEditarCliente); 
+
+        //Validation and format for the price of the format. (1,000, 10,000, etc.)
+        //Formato de los precios despues de los miles
+        ko.bindingHandlers.currency = {
+            update: function (element, valueAccessor) {
+                var value = ko.unwrap(valueAccessor());
+                var formattedValue = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                element.value = formattedValue;
+            }
+        };
+
+        //This is the function we use to bind the data in the view and list it.
+        //Funcion utilizada para relacionar los datos, esta vez, de los productos
+        function ListadoClientesViewModelFn() {
+            var self = this;
+            self.clientes = ko.observableArray([]);
+            self.cargando = ko.observable(true);
+
+            self.noHayClientes = ko.pureComputed(function () {
+                if (self.cargando()) {
+                    return false;
+                }
+                return self.clientes().length === 0;
+            });
+        }
+
+        //This is the function we use to bind the data in the view and list it.
+        function FiltroBasicoClientesViewModelFn() {
+
+            var self = this; 
+ 
+            self.nombreClienteFiltro = ko.observable('').extend({
+                required: { message: "Este campo es requerido" }
+            });
+
+            self.manejarFiltroPorNombre = async function () {
+                await obtenerClienteConElNombreOTelefono(self.nombreClienteFiltro());
+            }
+
+        }
+
+
+        //This function is use to get each element to push it into the list. We pass all the properties
+        //of one property
+        function clienteElementoListadoViewModel
+            ({ idCliente, nombre, telefono, grupo, nota, idGrupo, productos_comprados}) {
+
+            var self = this;
+
+            let maxLengthNombreCliente = 20;
+            let maxLengthNota = 20;
+            let maxLengthTelefonoCliente = 10;
+
+            self.idCliente = ko.observable(idCliente);
+             
+            self.nombre = ko.observable(nombre).extend({
+                required: {
+                    message: "Este campo es requerido"
+                }
+            });
+
+            self.nota = ko.observable(nota).extend({
+                required: {
+                    message: "Este campo es requerido"
+                }
+            });
+
+            self.telefono = ko.observable(telefono).extend({
+                required: {
+                    message: "Este campo es requerido"
+                },
+                maxLength: { params: 10, message: "Número inválido" },
+                number: { message: "Solo números" }
+            });
+
+            self.productos_comprados = ko.observable(productos_comprados);
+
+            self.grupo = ko.observable(self.grupo);
+ 
+            self.grupoData = ko.observableArray([]);
+        
+
+            self.gruposSeleccion = ko.observableArray([]);
+ 
+            self.esNuevo = ko.pureComputed(function () {
+                return self.idCliente() == 0;
+            });
+
+            //Async function to load data into the observable array
+            self.loadGruposData = async function () {
+                try {
+                    const data = await ObtenerGruposClientes();
+                    
+                    if(data.length == 0){
+                        let objeto = {IdGrupo: 0, nombre: "No tienes grupos creados..."}
+                        self.gruposSeleccion(objeto);
+                        return;
+                    }
+                    else if (data) {
+                        self.gruposSeleccion(data);
+                        return data;
+                    } else {
+                        console.error("Error al cargar las categorias");
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            };
+
+            //Cargando los clientes
+            if (self.esNuevo()) {
+                self.loadGruposData();
+            }
+
+            self.nombreGrupo = ko.observable(); 
+
+            //Función para asignar el nombre del grupo a las variables
+            self.asignarGrupo = async function () {
+
+                const grupo = await obtenerGrupo(idGrupo);
+                self.nombreGrupo(grupo);
+                 
+            }
+
+            //Ejecutando la función
+            if (!self.esNuevo()) {
+                self.asignarGrupo();
+            }
+               
+
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input CATEGORIA
+            self.charCountNombreCliente = ko.pureComputed(function () {
+
+                if (self.nombre() === undefined) {
+                    return '0';
+                }
+                if (self.nombre() != undefined) {
+                    return self.nombre().length;
+                }
+            });
+
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input CATEGORIA
+            self.charCountTelefonoCliente = ko.pureComputed(function () {
+
+                if (self.telefono() === undefined) {
+                    return '0';
+                }
+                if (self.telefono() != undefined) {
+                    return self.telefono().length;
+                }
+            });
+
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input SUBCATEGORIA
+            self.charCountNota = ko.pureComputed(function () {
+
+                if (self.nota() === undefined) {
+                    return '0';
+                }
+                if (self.nota() != undefined) {
+                    return self.nota().length;
+                }
+            });
+
+
+            self.enforceMaxLength = function (data, event) {
+                var input = event.target.value;
+                if (input.length > maxLengthNombreCliente) {
+                    event.target.value = input.substring(0, maxLengthNombreCliente);
+                    self.nombre(input.substring(0, maxLengthNombreCliente));
+                } else {
+                    self.nombre(input);
+                }
+            };
+
+            self.enforceMaxLengthTelefono = function (data, event) {
+                var input = event.target.value;
+                if (input.length > maxLengthTelefonoCliente) {
+                    event.target.value = input.substring(0, maxLengthTelefonoCliente);
+                    self.telefono(input.substring(0, maxLengthTelefonoCliente));
+                } else {
+                    self.telefono(input);
+                }
+            };
+
+            self.enforceMaxLengthNota = function (data, event) {
+                var input = event.target.value;
+                if (input.length > maxLengthNota) {
+                    event.target.value = input.substring(0, maxLengthNota);
+                    self.nota(input.substring(0, maxLengthNota));
+                } else {
+                    self.nota(input);
+                }
+            };
+
+            self.enviandoCliente = ko.observable(false);
+
+            self.manejarSubmitCliente = async function () {
+
+                var errors = ko.validation.group(self);
+
+                if (errors().length > 0) {
+
+                    errors.showAllMessages();
+                    this.enviandoCliente(false);
+                    return;
+                }
+
+                //If the submit button is pressed, enviandoPropiedad is true and the button will be disabled
+                if (this.enviandoCliente()) {
+                    return;
+                }
+
+                this.enviandoCliente(true);
+
+                const cliente = {
+                    id: self.idCliente,
+                    telefono: self.telefono,
+                    nombreCliente: self.nombre,
+                    nota: self.nota, 
+                    grupo: self.grupo(), 
+                }
+
+                await guardarCliente(cliente);
+
+                this.enviandoCliente(false);
+            }
+        }
+
+
+        const clienteEditarViewModel = {
+
+            maxLengthNombreCliente: 20,
+            maxLengthNota: 20,
+
+            idCliente: 0,
+
+            idGrupo: ko.observable(''),
+         
+
+            nombre: ko.observable('').extend({
+                required: {
+                    message: "Este campo es requerido"
+                }
+            }),
+
+            nota: ko.observable('').extend({
+                required: {
+                    message: "Este campo es requerido"
+                }
+            }),
+
+            telefono: ko.observable('').extend({
+                required: {
+                    message: "Este campo es requerido"
+                },
+                maxLength: { params: 10, message: "Número inválido" },
+                number: { message: "Solo números" }
+            }),
+             
+            initializing: ko.observable(true), // Add a flag for initial load
+
+            grupo: ko.observable(),
+         
+            gruposData: ko.observableArray([]),
+ 
+
+            gruposSeleccion: ko.observableArray([]),
+ 
+            //Async function to load data into the observable array
+            loadGruposData: async function () {
+                try {
+                    const data = await ObtenerGruposClientes();
+
+                    if (data) {
+                        self.gruposSeleccion(data);
+                        return data;
+                    } else {
+                        console.error("Error al cargar las categorias");
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            },
+             
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input DESCRIPTION
+            charCountNombreCliente: ko.pureComputed(function () {
+                return clienteEditarViewModel.nombre() ? clienteEditarViewModel.nombre().length : '0';
+            }),
+
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input DIRECCION
+            charCountNota: ko.pureComputed(function () {
+                return clienteEditarViewModel.nota() ? clienteEditarViewModel.nota().length : '0';
+            }),
+
+            enforceMaxNombreLength: function (data, event) {
+                var input = event.target.value;
+                if (input.length > clienteEditarViewModel.maxLengthNombreCliente) {
+                    event.target.value = input.substring(0, clienteEditarViewModel.maxLengthNombreCliente);
+                    clienteEditarViewModel.nombre(input.substring(0, clienteEditarViewModel.maxLengthNombreCliente));
+                } else {
+                    clienteEditarViewModel.nombre(input);
+                }
+            },
+
+            enforceMaxLengthNota: function (data, event) {
+                var input = event.target.value;
+                if (input.length > clienteEditarViewModel.maxLengthNota) {
+                    event.target.value = input.substring(0, clienteEditarViewModel.maxLengthNota);
+                    clienteEditarViewModel.nota(input.substring(0, clienteEditarViewModel.maxLengthNota));
+                } else {
+                    clienteEditarViewModel.nota(input);
+                }
+            },
+
+            gruposData: async function () {
+
+                try {
+                    const data = await ObtenerGruposClientes();
+
+                    if (!data) {
+                        console.error("Error cargando los grupos");
+                        return;
+                    }
+
+                    this.gruposSeleccion(data); 
+
+                    return data;
+
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            },
+  
+            enviandoCliente: ko.observable(false),
+
+            manejarSubmitEditarCliente: async function () {
+
+                var errors = ko.validation.group(this);
+
+
+                if (errors().length > 0) {
+                    errors.showAllMessages();
+                    this.enviandoCliente(false);
+                    return;
+                }
+
+                //If the submit button is pressed, enviandoPropiedad is true and the button will be disabled
+                if (this.enviandoCliente()) {
+                    return;
+                }
+
+                this.enviandoCliente(true);
+
+                const cliente = {
+                    id: this.idCliente,
+                    nombreCliente: this.nombre(),
+                    telefono: this.telefono(),
+                    nota: this.nota(),
+                    grupo: this.grupo(),
+                }
+
+                await editarCliente(cliente);
+                this.enviandoCliente(false);
+            }
+        }
+
+        // Ensure the context of 'this' is maintained in asynchronous functions
+        clienteEditarViewModel.gruposData = clienteEditarViewModel.gruposData.bind(clienteEditarViewModel);
+
+        // Subscribe to changes in the selected province
+        clienteEditarViewModel.grupo.subscribe(function (gruposSeleccionada) {
+            if (clienteEditarViewModel.initializing()) {
+                return;
+            } 
+        });
+
+        const clientesListadoViewModel = new ListadoClientesViewModelFn();
+        const filtroClientesListadoVM = new FiltroBasicoClientesViewModelFn();
+ 
+        ko.applyBindings(clientesListadoViewModel, document.getElementById('cliente-listado-contenedor'));
+        ko.applyBindings(clienteEditarViewModel, document.getElementById('editar-cliente'));
+        ko.applyBindings(filtroClientesListadoVM, document.getElementById('filtro-basico-clientes'));
+        ObtenerClientes();
+    </script>
+}
