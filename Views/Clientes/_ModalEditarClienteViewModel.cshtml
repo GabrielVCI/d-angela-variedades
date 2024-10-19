@@ -1,0 +1,68 @@
+﻿<!-- Vertically centered modal -->
+<div class="modal fade" id="editar-cliente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Cliente</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form data-bind="submit: manejarSubmitEditarCliente">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-4">
+                                <label for="NombreProducto" class="form-label">Nombre del cliente</label>
+                                <input type="text"
+                                       data-bind="value: nombre, event: { input: enforceMaxNombreLength }"
+                                       class="form-control"
+                                       id="nombre">
+                                <div><span data-bind="text: charCountNombreCliente"></span>/20</div>
+                                <div class="error error-producto text-danger" data-bind="validationMessage: nombre"></div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="NombreCategoria" class="form-label">Telefono</label>
+                                <input type="number"
+                                       data-bind="value: telefono"
+                                       class="form-control"
+                                       id="nombre">
+                                <div class="error error-producto text-danger" data-bind="validationMessage: telefono"></div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="categorias" class="form-label">Grupo</label> <br>
+                                <select class="custom-select form-select" id="categorias"
+                                        data-bind="options: gruposSeleccion,
+                                                                   optionsText: 'nombre',
+                                                                   optionsValue: 'grupoId',
+                                                                   value: grupo">
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="NombreCategoria" class="form-label">Nota</label>
+                                <input type="text"
+                                       data-bind="value: nota, event: { input: enforceMaxLengthNota }"
+                                       class="form-control"
+                                       id="nombre">
+                                <div><span data-bind="text: charCountNota"></span>/20</div>
+                                <div class="error error-producto text-danger" data-bind="validationMessage: nota"></div>
+                            </div>
+                        </div>
+                 
+                    </div>
+
+                    <div class="form-agregar-producto">
+                        <button class="button-guardar-producto-agregado" type="submit" data-bind="disabled: enviandoCliente">
+                            Editar Cliente
+                        </button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->

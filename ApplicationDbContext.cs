@@ -18,6 +18,8 @@ namespace d_angela_variedades
         public DbSet<Ventas> Ventas { get; set; }   
         public DbSet<Productos> Productos{ get; set; }   
         public DbSet<Empresas> Empresas{ get; set; }   
+        public DbSet<Cliente> Clientes{ get; set; }   
+        public DbSet<Grupos> Grupos{ get; set; }   
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -43,6 +45,14 @@ namespace d_angela_variedades
             builder.Entity<Productos>()
                 .HasKey(p => p.IdProducto)
                 .HasName("PrimaryKey_Producto");
+
+            builder.Entity<Cliente>()
+                .HasKey(v => v.IdCliente)
+                .HasName("PrimaryKey_Clientes");
+
+            builder.Entity<Grupos>()
+                .HasKey(p => p.GrupoId)
+                .HasName("PrimaryKey_Grupo");
 
             builder.Entity<IdentityUser>(entity =>
             {
