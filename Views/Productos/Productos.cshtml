@@ -300,9 +300,8 @@
             // Async function to load data into the observable array
             self.categoriasData = async function () {
                 try {
-                    const data = await ObtenerCategorias();
-                    if (data) {
-                  
+                    const data = await ObtenerCategorias(); 
+                    if (data) {  
                         self.categoriaSeleccion(data);
                         return data;
                     } else {
@@ -332,7 +331,7 @@
             // Update the selected subcategory observable whenever the selected category Id changes
             self.categoria.subscribe(async function (categoriaSeleccionada) {
                 if (categoriaSeleccionada) {
-                    try {
+                    try { 
                         const data = await ObtenerSubcategorias(categoriaSeleccionada);
 
                         if (data) {
