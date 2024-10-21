@@ -1,0 +1,40 @@
+﻿<!-- Vertically centered modal -->
+<div class="modal fade" id="editar-grupo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Grupo</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form data-bind="submit: manejarSubmitEditarGrupo">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-4">
+                                <label for="NombreProducto" class="form-label">Nombre del grupo</label>
+                                <input type="text"
+                                       data-bind="value: nombreGrupo, event: { input: enforceMaxNombreLength }"
+                                       class="form-control"
+                                       id="nombre">
+                                <div><span data-bind="text: charCountNombreGrupo"></span>/20</div>
+                                <div class="error error-producto text-danger" data-bind="validationMessage: nombreGrupo"></div>
+                            </div> 
+ 
+                        </div>
+
+                    </div>
+
+                    <div class="form-agregar-producto">
+                        <button class="button-guardar-producto-agregado" type="submit" data-bind="disabled: enviandoGrupo">
+                            Editar Grupo
+                        </button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->

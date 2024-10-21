@@ -58,6 +58,11 @@ namespace d_angela_variedades.ApiControllers
         {
             var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
 
+            if(usuarioId is null)
+            {
+                return StatusCode(500);
+            }
+
             var clientes = await clientesRepositorio.FiltrarClientePorNombreOTelefono(nombre_telefono);
 
             if(clientes.Count() == 0)
