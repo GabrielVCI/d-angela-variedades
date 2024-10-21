@@ -12,9 +12,7 @@
 };
 
 async function guardarCliente(cliente) {
-
-
-    console.log(cliente)
+ 
     try {
         let grupoId = cliente.grupo.grupoId;
         
@@ -37,7 +35,7 @@ async function guardarCliente(cliente) {
         });
 
         if (!response.ok) {
-            console.log(response)
+            
             manejarErrorApi(response);
             return;
         }
@@ -46,7 +44,7 @@ async function guardarCliente(cliente) {
         MensajeDeExito("El cliente ha sido agregado");
 
     } catch (error) {
-        console.log(error);
+        
         manejarErrorApi(error);
         return;
     }
@@ -89,8 +87,7 @@ function focusOutCliente() {
 
 async function obtenerClienteAEditar(cliente) {
 
-    try {
-
+    try { 
         const response = await fetch(`${urlClientes}/${cliente.idCliente()}`, {
             method: 'GET',
             headers: {
@@ -104,7 +101,7 @@ async function obtenerClienteAEditar(cliente) {
             return;
         }
         const json = await response.json();
-
+      
         clienteEditarViewModel.idCliente = json.idCliente;
         clienteEditarViewModel.nombre(json.nombre);
         clienteEditarViewModel.nota(json.nota);
@@ -148,7 +145,6 @@ async function editarCliente(cliente) {
             headers: {
                 'Content-Type': "application/json"
             }
-
         });
 
 
@@ -205,7 +201,7 @@ function confirmarEliminacionDelCliente(cliente) {
             return;
         },
 
-        titulo: `¿Desea borrar el cliente ${producto.nombre()}?`,
+        titulo: `¿Desea borrar el cliente ${cliente.nombre()}?`,
 
         text: "Se eliminará de su lista de clientes."
     });

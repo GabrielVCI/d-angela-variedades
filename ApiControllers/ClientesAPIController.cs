@@ -43,12 +43,23 @@ namespace d_angela_variedades.ApiControllers
         {
             var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
 
-            var cliente = await clientesRepositorio.ClienteExiste(clienteId);
+            var empresaId = await usuariosRepositorio.ObtenerEmpresaUsuarioId(usuarioId);
 
-            if (!cliente)
+            var clienteExiste = await clientesRepositorio.ClienteExiste(clienteId);
+
+            if (!clienteExiste)
             {
                 return StatusCode(404, "Cliente no ha sido encontrado");
             }
+
+            var clientePerteneceAlaEmpresa = await clientesRepositorio.ClientePerteneceAlaEmpresa(empresaId);
+
+            if (!clientePerteneceAlaEmpresa)
+            {
+                return StatusCode(403);
+            }
+
+            var cliente = await clientesRepositorio.ObtenerClienteAEditar(clienteId);
 
             return Ok(cliente);
         }
@@ -73,7 +84,9 @@ namespace d_angela_variedades.ApiControllers
         {
             var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
 
-            var cliente = await clientesRepositorio.GuardarCliente(clienteDTO);
+            var empresaId = await usuariosRepositorio.ObtenerEmpresaUsuarioId(usuarioId);
+
+            var cliente = await clientesRepositorio.GuardarCliente(clienteDTO, empresaId);
 
             if (!cliente)
             {

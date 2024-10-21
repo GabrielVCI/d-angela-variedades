@@ -20,6 +20,13 @@ namespace d_angela_variedades.Repositorio
             return clienteExiste;
         }
 
+        public async Task<bool> ClientePerteneceAlaEmpresa(int empresaId)
+        {
+            var clientePerteneceAlaEmpresa = await context.Clientes.AnyAsync(cli => cli.EmpresaId == empresaId);
+
+            return clientePerteneceAlaEmpresa;
+        }
+
         public async Task<bool> EditarCliente(ClienteDTO cliente, Guid clienteId)
         {
             var clienteAEditar = await context.Clientes.FirstOrDefaultAsync(cli => cli.IdCliente == clienteId);
@@ -51,14 +58,15 @@ namespace d_angela_variedades.Repositorio
             return clientes;
         }
 
-        public async Task<bool> GuardarCliente(ClienteDTO cliente)
+        public async Task<bool> GuardarCliente(ClienteDTO cliente, int empresaId)
         {
             var nuevoCliente = new Cliente()
             {
                 Nombre = cliente.NombreCliente,
                 Telefono = cliente.Telefono,
                 Nota = cliente.Nota,
-                GrupoId = cliente.GrupoId
+                GrupoId = cliente.GrupoId,
+                EmpresaId = empresaId
             };
 
             context.Add(nuevoCliente);
