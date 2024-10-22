@@ -20,10 +20,10 @@
     <div class="clientes-actions-container">
 
         <div class="buscador-filtro" id="filtro-basico-clientes">
-            <button class="btn button-filtrar-producto me-4" >
+            <a asp-action="Index" asp-controller="Grupos" class="btn button-filtrar-producto me-4" >
                 Grupos
                 <i class="bi bi-collection" style="font-size: 15px;"></i> 
-            </button>
+            </a>
             <form class="d-flex" data-bind="submit: manejarFiltroPorNombre">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control buscador-producto" data-bind="value: nombreClienteFiltro" placeholder="Nombre o teléfono del cliente">
@@ -84,7 +84,7 @@
                                     <label for="categorias" class="form-label">Grupo</label> <br>
                                     <select class="custom-select form-select" id="categorias"
                                             data-bind="options: gruposSeleccion,
-                                                                   optionsText: 'nombre',
+                                                                   optionsText: 'nombreGrupo',
                                                                    value: grupo">
                                     </select>
                                 </div>
@@ -133,7 +133,7 @@
                             <span data-bind="text: telefono"></span>
                         </td>
                         <td>
-                            <span data-bind="text: grupo"></span>
+                            <span data-bind="text: nombreGrupo"></span>
                         </td>
         
                         <td>
@@ -142,9 +142,7 @@
          
                         <td>
                             <div class="actions-producto-btn-container">
-                                <button>
-                                    <i class="bi bi-eye-fill" style="color: green"></i>
-                                </button>
+          
                                 <button>
                                     <i class="bi bi-pencil" data-bind="click: obtenerClienteAEditar" style="color: blue"></i>
                                 </button>
@@ -241,7 +239,7 @@
         //This function is use to get each element to push it into the list. We pass all the properties
         //of one property
         function clienteElementoListadoViewModel
-            ({ idCliente, nombre, telefono, grupo, nota, idGrupo, productos_comprados}) {
+            ({ idCliente, nombre, telefono, grupo, nota, grupoId, productos_comprados}) {
 
             var self = this;
 
@@ -284,13 +282,14 @@
                 return self.idCliente() == 0;
             });
 
+            self.grupoId = ko.observable(grupoId);
             //Async function to load data into the observable array
             self.loadGruposData = async function () {
                 try {
                     const data = await ObtenerGruposClientes();
-                    
+                   
                     if(data.length == 0){
-                        let objeto = {IdGrupo: 0, nombre: "No tienes grupos creados..."}
+                        let objeto = { grupoId: 0, nombreGrupo: "No tienes grupos creados..." }
                         self.gruposSeleccion(objeto);
                         return;
                     }
@@ -315,8 +314,9 @@
 
             //Función para asignar el nombre del grupo a las variables
             self.asignarGrupo = async function () {
-
-                const grupo = await obtenerGrupo(idGrupo);
+                console.log(self.grupoId())
+                const grupo = await obtenerGrupo(self.grupoId());
+                console.log(grupo)
                 self.nombreGrupo(grupo);
                  
             }

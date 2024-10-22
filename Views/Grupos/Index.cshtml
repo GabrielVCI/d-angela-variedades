@@ -1,0 +1,340 @@
+﻿@{
+    ViewData["Title"] = "Listado de Grupos";
+}
+
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="form-container mb-4">
+        </div>
+        <div class="text-center text-white mb-3">
+            <h1 class="display-4 fw-bolder">Listado de grupos</h1>
+            <p class="lead fw-normal text-white-50 mb-0">
+                Todos los grupos a los que tus clientes pueden pertenecer.
+            </p>
+        </div>
+    </div>
+</header>
+
+<div class="clientes-container">
+
+    <div class="clientes-actions-container">
+
+        <div class="buscador-filtro" id="filtro-basico-grupo">
+ 
+            <form class="d-flex" data-bind="submit: manejarFiltroPorNombre">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control buscador-producto" data-bind="value: nombreGrupoFiltro" placeholder="Nombre del grupo">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+
+            <button class="reload-productos" data-bind="click: ObtenerGrupos">
+                <i class="bi bi-arrow-clockwise"></i>
+            </button>
+        </div>
+        <div class="crear-producto-btn-container">
+            <button class="button-agregar-producto" onclick="agregarNuevoGrupo()">Agregar Grupo</button>
+        </div>
+
+    </div>
+
+    <div class="listado-container-tabla-productos" id="grupo-listado-contenedor">
+        <div data-bind="foreach: grupos">
+            @*Formulario para crear un producto*@
+            <div class="form-container" data-bind="visible: esNuevo">
+                <div class="hidden" id="overlay" data-bind="visible: esNuevo"></div>
+
+                <section class="hidden" id="modal-design-grupo" data-bind="visible: esNuevo">
+
+                    <div class="flex">
+                        <h3 class="fw-bold">Agrega un grupo</h3>
+                        <button class="btn btn-close" data-bind="click: focusOutGrupo"></button>
+                    </div>
+
+                    <form data-bind="submit: manejarSubmitGrupo">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-4">
+                                    <label for="NombreProducto" class="form-label">Nombre del grupo</label>
+                                    <input type="text"
+                                           data-bind="value: nombreGrupo, event: { input: enforceMaxLength }"
+                                           class="form-control"
+                                           id="nombre">
+                                    <div><span data-bind="text: charCountNombreGrupo"></span>/20</div>
+                                    <div class="error error-producto text-danger" data-bind="validationMessage: nombreGrupo"></div>
+                                </div>
+
+                               
+                            </div>
+                        </div>
+
+                        <div class="form-agregar-producto">
+                            <button class="button-guardar-producto-agregado" type="submit" data-bind="disabled: enviandoGrupo">
+                                Agregar Grupo
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr class="table-trows">
+                        <th scope="col">NOMBRE DEL GRUPO</th>  
+                        <th scope="col">ACCIONES</th>
+                   
+                    </tr>
+                </thead>
+
+                <tbody class="table-body" data-bind="foreach: grupos">
+
+                    <tr>
+                        <td>
+                            <span data-bind="text: nombreGrupo"></span>
+                        </td>
+           
+                        <td>
+                            <div class="actions-producto-btn-container">
+                 
+                                <button>
+                                    <i class="bi bi-pencil" data-bind="click: obtenerGrupoAEditar" style="color: blue"></i>
+                                </button>
+                                <button>
+                                    <i class="bi bi-trash" data-bind="click: confirmarEliminacionDelGrupo" style="color: red"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="categorias-funcionalities">
+            <div data-bind="visible: cargando" class="spinner-border">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+
+            <div data-bind="visible: noHayGrupos">
+                <p>No tienes grupos registrados.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="_ModalEditarGrupoViewModel" />
+
+@section Scripts {
+
+    <script src="~/js/clientes.js"></script>
+    <script src="~/js/grupos.js"></script>
+    <script src="~/js/utilidades.js"></script>
+
+    <script>
+        const urlClientes = "/api/clientes";
+        const urlCategorias = "/api/productos";
+        const urlSubategorias = "/api/subcategorias";
+        const urlProductos = "/api/productos";
+        const urlGrupos = "/api/grupos";
+
+        //Validaciones para los campos vacios y los mensajes de error
+        ko.validation.init({
+            insertMessages: false,  // Avoid inserting automatic messages
+            decorateInputElement: true,
+            errorElementClass: 'error'
+        }, true);
+
+
+        const modalEditarGrupo = document.getElementById('editar-grupo');
+        const modalEditarGrupoBSTP = new bootstrap.Modal(modalEditarGrupo);
+
+        //Validation and format for the price of the format. (1,000, 10,000, etc.)
+        //Formato de los precios despues de los miles
+        ko.bindingHandlers.currency = {
+            update: function (element, valueAccessor) {
+                var value = ko.unwrap(valueAccessor());
+                var formattedValue = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                element.value = formattedValue;
+            }
+        };
+
+        //This is the function we use to bind the data in the view and list it.
+        //Funcion utilizada para relacionar los datos, esta vez, de los productos
+        function ListadoGruposViewModelFn() {
+            var self = this;
+            self.grupos = ko.observableArray([]);
+            self.cargando = ko.observable(true);
+
+            self.noHayGrupos = ko.pureComputed(function () {
+                if (self.cargando()) {
+                    return false;
+                }
+                return self.grupos().length === 0;
+            });
+        }
+
+        //This is the function we use to bind the data in the view and list it.
+        function FiltroBasicoGruposViewModelFn() {
+
+            var self = this;
+
+            self.nombreGrupoFiltro = ko.observable('').extend({
+                required: { message: "Este campo es requerido" }
+            });
+
+            self.manejarFiltroPorNombre = async function () {
+                await obtenerGruposConElNombre(self.nombreGrupoFiltro());
+            }
+
+        }
+
+
+        //This function is use to get each element to push it into the list. We pass all the properties
+        //of one property
+        function grupoElementoListadoViewModel
+            ({ grupoId, nombreGrupo}) {
+
+            var self = this;
+
+            let maxLengthNombreGrupo = 20;
+
+            self.grupoId = ko.observable(grupoId);
+
+            self.nombreGrupo = ko.observable(nombreGrupo).extend({
+                required: {
+                    message: "Este campo es requerido"
+                }
+            });
+              
+            self.esNuevo = ko.pureComputed(function () {
+                return self.grupoId() == 0;
+            }); 
+ 
+ 
+
+
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input CATEGORIA
+            self.charCountNombreGrupo = ko.pureComputed(function () {
+
+                if (self.nombreGrupo() === undefined) {
+                    return '0';
+                }
+                if (self.nombreGrupo() != undefined) {
+                    return self.nombreGrupo().length;
+                }
+            });
+   
+            self.enforceMaxLength = function (data, event) {
+                var input = event.target.value;
+                if (input.length > maxLengthNombreGrupo) {
+                    event.target.value = input.substring(0, maxLengthNombreGrupo);
+                    self.nombreGrupo(input.substring(0, maxLengthNombreGrupo));
+                } else {
+                    self.nombreGrupo(input);
+                }
+            };
+
+ 
+
+            self.enviandoGrupo = ko.observable(false);
+
+            self.manejarSubmitGrupo = async function () {
+
+                var errors = ko.validation.group(self);
+
+                if (errors().length > 0) {
+
+                    errors.showAllMessages();
+                    this.enviandoGrupo(false);
+                    return;
+                }
+
+                //If the submit button is pressed, enviandoPropiedad is true and the button will be disabled
+                if (this.enviandoGrupo()) {
+                    return;
+                }
+
+                this.enviandoGrupo(true);
+
+                const grupo = {
+                    grupoId: self.grupoId,
+                    nombreGrupo: self.nombreGrupo
+                }
+
+                await guardarGrupo(grupo);
+
+                this.enviandoGrupo(false);
+            }
+        }
+
+
+        const grupoEditarViewModel = {
+
+            maxLengthNombreGrupo: 20,
+            grupoId: 0,
+
+            nombreGrupo: ko.observable('').extend({
+                required: {
+                    message: "Este campo es requerido"
+                }
+            }), 
+
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input DESCRIPTION
+            charCountNombreGrupo: ko.pureComputed(function () {
+                return grupoEditarViewModel.nombreGrupo() ? grupoEditarViewModel.nombreGrupo().length : '0';
+            }),
+             
+
+            enforceMaxNombreLength: function (data, event) {
+                var input = event.target.value;
+                if (input.length > grupoEditarViewModel.maxLengthNombreGrupo) {
+                    event.target.value = input.substring(0, grupoEditarViewModel.maxLengthNombreGrupo);
+                    grupoEditarViewModel.nombreGrupo(input.substring(0, grupoEditarViewModel.maxLengthNombreGrupo));
+                } else {
+                    grupoEditarViewModel.nombreGrupo(input);
+                }
+            },
+              
+
+            enviandoGrupo: ko.observable(false),
+
+            manejarSubmitEditarGrupo: async function () {
+
+                var errors = ko.validation.group(this);
+
+
+                if (errors().length > 0) {
+                    errors.showAllMessages();
+                    this.enviandoGrupo(false);
+                    return;
+                }
+
+                //If the submit button is pressed, enviandoPropiedad is true and the button will be disabled
+                if (this.enviandoGrupo()) {
+                    return;
+                }
+
+                this.enviandoGrupo(true);
+
+                const grupo = {
+                    id: this.grupoId,
+                    nombreGrupo: this.nombreGrupo()
+                }
+
+                await editarGrupo(grupo);
+                this.enviandoGrupo(false);
+            }
+        }
+           
+        const gruposListadoViewModel = new ListadoGruposViewModelFn();
+        const filtroGruposListadoVM = new FiltroBasicoGruposViewModelFn();
+
+        ko.applyBindings(gruposListadoViewModel, document.getElementById('grupo-listado-contenedor'));
+        ko.applyBindings(grupoEditarViewModel, document.getElementById('editar-grupo'));
+        ko.applyBindings(filtroGruposListadoVM, document.getElementById('filtro-basico-grupo'));
+        ObtenerGrupos();
+    </script>
+}

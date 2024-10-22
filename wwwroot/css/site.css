@@ -152,12 +152,12 @@ body {
 
 
 /*Clientes*/
-#modal-design-cliente {
+#modal-design-cliente, #modal-design-grupo {
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 0.8rem;
-    width: 850px;
+    width: 650px;
     background-color: #f1f5f9;
     padding: 1.3rem;
     min-height: 250px;
@@ -167,25 +167,25 @@ body {
     border-radius: 15px;
 }
 
-    #modal-design-cliente label {
+    #modal-design-cliente label, #modal-design-grupo label {
         font-size: 20px
     }
 
 
-    #modal-design-cliente input {
+    #modal-design-cliente input, #modal-design-grupo input {
         padding: 0.7rem 1rem;
         border: 1px solid #ddd;
         border-radius: 5px;
         font-size: 0.9em;
     }
 
-    #modal-design-cliente p {
+    #modal-design-cliente p, #modal-design-grupo p {
         font-size: 0.9rem;
         color: #777;
         margin: 0.4rem 0 0.2rem;
     }
 
-#modal-design-cliente {
+#modal-design-cliente, #modal-design-grupo {
     z-index: 3;
 }
 

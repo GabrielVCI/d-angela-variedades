@@ -7,12 +7,12 @@
                 telefono: '',
                 nota: '',
                 grupo: '',
-                idGrupo: '', 
+                grupoId: '', 
             }));
 };
 
 async function guardarCliente(cliente) {
- 
+     
     try {
         let grupoId = cliente.grupo.grupoId;
         
@@ -35,7 +35,7 @@ async function guardarCliente(cliente) {
         });
 
         if (!response.ok) {
-            
+             
             manejarErrorApi(response);
             return;
         }
@@ -44,7 +44,7 @@ async function guardarCliente(cliente) {
         MensajeDeExito("El cliente ha sido agregado");
 
     } catch (error) {
-        
+         
         manejarErrorApi(error);
         return;
     }
@@ -69,7 +69,7 @@ async function ObtenerClientes() {
 
     const json = await respuesta.json();
     clientesListadoViewModel.clientes([]);
-
+     
     json.forEach(cliente => {
         const viewModel = new clienteElementoListadoViewModel(cliente);
         clientesListadoViewModel.clientes.push(viewModel);
@@ -237,7 +237,7 @@ async function obtenerClienteConElNombreOTelefono(nombre_telefono_cliente) {
         const json = await response.json();
         clientesListadoViewModel.clientes([]);
 
-        json.forEach(producto => {
+        json.forEach(cliente => {
             const viewModel = new clienteElementoListadoViewModel(cliente);
             clientesListadoViewModel.clientes.push(viewModel);
         });
