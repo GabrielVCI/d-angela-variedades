@@ -25,9 +25,10 @@
                             <div class="mb-4">
                                 <label for="NombreCategoria" class="form-label">Telefono</label>
                                 <input type="number"
-                                       data-bind="value: telefono"
+                                       data-bind="value: telefono, event: { input: enforceMaxTelefonoLength }"
                                        class="form-control"
                                        id="nombre">
+                                <div><span data-bind="text: charCountTelefonoCliente"></span>/10</div>
                                 <div class="error error-producto text-danger" data-bind="validationMessage: telefono"></div>
                             </div>
 

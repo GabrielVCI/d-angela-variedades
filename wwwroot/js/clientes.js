@@ -35,7 +35,15 @@ async function guardarCliente(cliente) {
         });
 
         if (!response.ok) {
+            if (response.status == 422) {
+                mostrarMensajeError("Ya tienes un cliente con este nombre"); 
+                return;
+            }
              
+            else if (response.status == 421) {
+                mostrarMensajeError("Ya tienes un cliente con este telefono"); 
+                return;
+            } 
             manejarErrorApi(response);
             return;
         }
@@ -126,17 +134,15 @@ async function obtenerClienteAEditar(cliente) {
 async function editarCliente(cliente) {
 
     try {
-
+         
         completandoAccionTimer();
 
         const object = {
             "NombreCliente": cliente.nombreCliente,
             "Telefono": cliente.telefono,
-            "GrupoId": grupoId,
+            "GrupoId": cliente.grupo,
             "Nota": cliente.nota
         }
-
-
         const data = JSON.stringify(object);
 
         const response = await fetch(`${urlClientes}/${cliente.id}`, {
@@ -149,11 +155,20 @@ async function editarCliente(cliente) {
 
 
         if (!response.ok) {
+            if (response.status == 422) {
+                mostrarMensajeError("Ya tienes un cliente con este nombre");
+                return;
+            }
+
+            else if (response.status == 421) {
+                mostrarMensajeError("Ya tienes un cliente con este telefono");
+                return;
+            } 
             manejarErrorApi(response);
             return;
         }
 
-        const json = response.json();
+        const json = await response.json();
         mensajeExitoAccionCompletada("¡El cliente ha sido editado correctamente!");
         await ObtenerClientes();
         modalEditarClienteBSTP.hide();
@@ -161,7 +176,7 @@ async function editarCliente(cliente) {
 
 
     } catch (error) {
-
+        console.log(error)
         manejarErrorApi(error);
         return;
     }
@@ -229,6 +244,7 @@ async function obtenerClienteConElNombreOTelefono(nombre_telefono_cliente) {
         });
 
         if (!response.ok) {
+             
             response.status == 404 ? mostrarMensajeError("No tienes clientes con este nombre o telefono") : manejarErrorApi(response);
             clientesListadoViewModel.cargando(false);
             return;

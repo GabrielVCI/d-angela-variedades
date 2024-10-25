@@ -14,6 +14,17 @@ namespace d_angela_variedades.Repositorio
         {
             this.context = context;
         }
+
+        public void EliminarGrupoDeClientesQuePertenecenAlGrupo(int grupoId, int empresaId)
+        { 
+
+            context.Database.ExecuteSqlRawAsync(
+                "UPDATE Clientes SET GrupoId = 0 WHERE GrupoId = {0} AND EmpresaId = {1}",
+                grupoId, empresaId);
+
+             
+        }
+
         public async Task<bool> EditarGrupo(GrupoDTO grupoDTO, int grupoId)
         {
             var grupo = await context.Grupos.FirstOrDefaultAsync(gru => gru.GrupoId == grupoId);

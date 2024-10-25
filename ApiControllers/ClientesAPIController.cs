@@ -66,7 +66,7 @@ namespace d_angela_variedades.ApiControllers
 
         [HttpGet("obtenerClientesPorElNombreOTelefono")]
         public async Task<ActionResult<List<Cliente>>> ObtenerClienteFiltro([FromQuery] string nombre_telefono)
-        {
+         {
             var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
 
             if(usuarioId is null)
@@ -91,6 +91,19 @@ namespace d_angela_variedades.ApiControllers
 
             var empresaId = await usuariosRepositorio.ObtenerEmpresaUsuarioId(usuarioId);
 
+            var clienteNombreExiste = await clientesRepositorio.ClienteConElMismoNombre(clienteDTO.NombreCliente, empresaId);
+            var clienteTelefonoExiste = await clientesRepositorio.ClienteConElMismoTelefono(clienteDTO.Telefono, empresaId);
+
+            if (clienteNombreExiste)
+            {
+                return StatusCode(422);
+            }
+
+            if (clienteTelefonoExiste)
+            {
+                return StatusCode(421);
+            }
+
             var cliente = await clientesRepositorio.GuardarCliente(clienteDTO, empresaId);
 
             if (!cliente)
@@ -107,10 +120,26 @@ namespace d_angela_variedades.ApiControllers
         {
             var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
 
+            var empresaId = await usuariosRepositorio.ObtenerEmpresaUsuarioId(usuarioId);
+
             var clienteExiste = await clientesRepositorio.ClienteExiste(clienteId);
+
             if (!clienteExiste)
             {
                 return StatusCode(404);
+            }
+  
+            var editarClienteCambioDeNombre = await clientesRepositorio.EditarClienteCambioDeNombre(clienteDTO.NombreCliente, clienteId, empresaId);   
+            var editarClienteCambioDeTelefono = await clientesRepositorio.EditarClienteCambioDeTelefono(clienteDTO.Telefono, clienteId, empresaId);   
+
+            if (editarClienteCambioDeNombre)
+            {
+                return StatusCode(422);
+            }
+
+            if (editarClienteCambioDeTelefono)
+            {
+                return StatusCode(421);
             }
 
             var cliente = await clientesRepositorio.EditarCliente(clienteDTO, clienteId);

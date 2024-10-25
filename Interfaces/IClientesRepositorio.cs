@@ -1,5 +1,6 @@
 ﻿using d_angela_variedades.Data;
 using d_angela_variedades.Entidades;
+using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace d_angela_variedades.Interfaces
 {
@@ -13,6 +14,10 @@ namespace d_angela_variedades.Interfaces
         Task<List<Cliente>> FiltrarClientePorNombreOTelefono(string nombre_telefono);
         Task<bool> ClienteExiste(Guid clienteId);
         Task<bool> ClientePerteneceAlaEmpresa(int empresaId);
+        Task<bool> ClienteConElMismoNombre(string nombreCliente, int empresaId);
+        Task<bool> ClienteConElMismoTelefono(long telefonoCliente, int empresaId);
+        Task<bool> EditarClienteCambioDeNombre(string nombreCliente, Guid clienteId, int empresaId);
+        Task<bool> EditarClienteCambioDeTelefono(long telefonoCliente, Guid clienteId, int empresaId); 
         Task<bool> Save();
     }
 }

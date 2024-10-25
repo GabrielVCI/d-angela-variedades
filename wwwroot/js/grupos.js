@@ -27,6 +27,8 @@ async function ObtenerGruposClientes() {
 
         const json = await response.json();
 
+        json.push({ grupoId: 0, nombreGrupo: "N/A" });
+        
         return json;
 
     } catch (error) {
@@ -36,7 +38,7 @@ async function ObtenerGruposClientes() {
 }
 
 async function obtenerGrupo(grupoId) {
-    console.log(grupoId)
+   
     try {
         const response = await fetch(`${urlGrupos}/${grupoId}`, {
 

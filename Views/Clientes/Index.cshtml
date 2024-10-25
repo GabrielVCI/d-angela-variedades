@@ -26,7 +26,7 @@
             </a>
             <form class="d-flex" data-bind="submit: manejarFiltroPorNombre">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control buscador-producto" data-bind="value: nombreClienteFiltro" placeholder="Nombre o teléfono del cliente">
+                    <input type="text" class="form-control buscador-producto" data-bind="value: nombreClienteFiltro, event: { input: enforceMaxLength }" placeholder="Nombre o teléfono del cliente">
                     <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
                         <i class="bi bi-search"></i>
                     </button>
@@ -223,12 +223,21 @@
         //This is the function we use to bind the data in the view and list it.
         function FiltroBasicoClientesViewModelFn() {
 
-            var self = this; 
- 
+            var self = this;
+            maxLengthNombreCliente = 30;
             self.nombreClienteFiltro = ko.observable('').extend({
                 required: { message: "Este campo es requerido" }
             });
 
+            self.enforceMaxLength = function (data, event) {
+                var input = event.target.value;
+                if (input.length > maxLengthNombreCliente) {
+                    event.target.value = input.substring(0, maxLengthNombreCliente);
+                    self.nombreClienteFiltro(input.substring(0, maxLengthNombreCliente));
+                } else {
+                    self.nombreClienteFiltro(input);
+                }
+            };
             self.manejarFiltroPorNombre = async function () {
                 await obtenerClienteConElNombreOTelefono(self.nombreClienteFiltro());
             }
@@ -314,9 +323,13 @@
 
             //Función para asignar el nombre del grupo a las variables
             self.asignarGrupo = async function () {
-                console.log(self.grupoId())
+                  
+                if (self.grupoId() == 0) {
+                    self.nombreGrupo("N/A");
+                    return;
+                }
                 const grupo = await obtenerGrupo(self.grupoId());
-                console.log(grupo)
+                 
                 self.nombreGrupo(grupo);
                  
             }
@@ -430,6 +443,7 @@
 
             maxLengthNombreCliente: 20,
             maxLengthNota: 20,
+            maxLengthTelefono: 10,
 
             idCliente: 0,
 
@@ -461,35 +475,23 @@
             grupo: ko.observable(),
          
             gruposData: ko.observableArray([]),
- 
-
+  
             gruposSeleccion: ko.observableArray([]),
- 
-            //Async function to load data into the observable array
-            loadGruposData: async function () {
-                try {
-                    const data = await ObtenerGruposClientes();
-
-                    if (data) {
-                        self.gruposSeleccion(data);
-                        return data;
-                    } else {
-                        console.error("Error al cargar las categorias");
-                        return;
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-            },
+  
              
-            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input DESCRIPTION
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input Nombre
             charCountNombreCliente: ko.pureComputed(function () {
                 return clienteEditarViewModel.nombre() ? clienteEditarViewModel.nombre().length : '0';
             }),
 
-            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input DIRECCION
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input Nota
             charCountNota: ko.pureComputed(function () {
                 return clienteEditarViewModel.nota() ? clienteEditarViewModel.nota().length : '0';
+            }),
+
+            //Function calculada para retornar la cantidad de caracteres que el usuario ha colocado en el input Telefono
+            charCountTelefonoCliente: ko.pureComputed(function () {
+                return clienteEditarViewModel.telefono() ? clienteEditarViewModel.telefono().length : '0';
             }),
 
             enforceMaxNombreLength: function (data, event) {
@@ -499,6 +501,16 @@
                     clienteEditarViewModel.nombre(input.substring(0, clienteEditarViewModel.maxLengthNombreCliente));
                 } else {
                     clienteEditarViewModel.nombre(input);
+                }
+            },
+
+            enforceMaxTelefonoLength: function (data, event) {
+                var input = event.target.value;
+                if (input.length > clienteEditarViewModel.maxLengthTelefono) {
+                    event.target.value = input.substring(0, clienteEditarViewModel.maxLengthTelefono);
+                    clienteEditarViewModel.telefono(input.substring(0, clienteEditarViewModel.maxLengthTelefono));
+                } else {
+                    clienteEditarViewModel.telefono(input);
                 }
             },
 
@@ -513,15 +525,21 @@
             },
 
             gruposData: async function () {
-
+                
                 try {
                     const data = await ObtenerGruposClientes();
-
                     if (!data) {
                         console.error("Error cargando los grupos");
                         return;
                     }
 
+                    if (data.length == 0) {
+                        let objeto = { grupoId: 0, nombreGrupo: "No tienes grupos creados" }
+                        this.gruposSeleccion(objeto);
+                       
+                        return;
+                    }
+                 
                     this.gruposSeleccion(data); 
 
                     return data;
@@ -536,7 +554,6 @@
             manejarSubmitEditarCliente: async function () {
 
                 var errors = ko.validation.group(this);
-
 
                 if (errors().length > 0) {
                     errors.showAllMessages();
@@ -572,6 +589,11 @@
             if (clienteEditarViewModel.initializing()) {
                 return;
             } 
+        });
+
+        // Initial load of provinces data
+        clienteEditarViewModel.gruposData().then(() => {
+            clienteEditarViewModel.initializing(false);
         });
 
         const clientesListadoViewModel = new ListadoClientesViewModelFn();

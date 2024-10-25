@@ -13,6 +13,7 @@ namespace d_angela_variedades.Interfaces
         Task<bool> EliminarGrupo(int grupoId, int empresaId);
         Task<bool> GrupoPerteneceAlaEmpresa(int grupoId, int empresaId);
         Task<List<Grupos>> ObtenerGrupoPorElNombre(string nombreGrupo, int empresaId);
+        void EliminarGrupoDeClientesQuePertenecenAlGrupo(int grupoId, int empresaId);
         Task<bool> Save();
     }
 }

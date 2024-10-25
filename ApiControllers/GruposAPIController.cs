@@ -144,6 +144,8 @@ namespace d_angela_variedades.ApiControllers
 
             var grupo = await gruposRepositorio.EliminarGrupo(GrupoId, empresaId);
 
+            gruposRepositorio.EliminarGrupoDeClientesQuePertenecenAlGrupo(GrupoId, empresaId);
+
             if (!grupo)
             {
                 return StatusCode(500);
