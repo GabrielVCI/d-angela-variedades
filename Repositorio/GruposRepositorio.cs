@@ -1,6 +1,7 @@
 ﻿using d_angela_variedades.Data;
 using d_angela_variedades.Entidades;
 using d_angela_variedades.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace d_angela_variedades.Repositorio
@@ -13,19 +14,49 @@ namespace d_angela_variedades.Repositorio
         {
             this.context = context;
         }
-        public Task<bool> EditarGrupo(GrupoDTO grupoDTO, int grupoId)
-        {
-            throw new NotImplementedException();
+
+        public void EliminarGrupoDeClientesQuePertenecenAlGrupo(int grupoId, int empresaId)
+        { 
+
+            context.Database.ExecuteSqlRawAsync(
+                "UPDATE Clientes SET GrupoId = 0 WHERE GrupoId = {0} AND EmpresaId = {1}",
+                grupoId, empresaId);
+
+             
         }
 
-        public Task<bool> EliminarGrupo(int grupoId)
+        public async Task<bool> EditarGrupo(GrupoDTO grupoDTO, int grupoId)
         {
-            throw new NotImplementedException();
+            var grupo = await context.Grupos.FirstOrDefaultAsync(gru => gru.GrupoId == grupoId);
+
+            grupo.NombreGrupo = grupoDTO.NombreGrupo;
+
+            context.Update(grupo);
+
+            return await Save();
         }
 
-        public Task<bool> GrupoExiste(int grupoId)
+        public async Task<bool> EliminarGrupo(int grupoId, int empresaId)
         {
-            throw new NotImplementedException();
+            var grupo = await context.Grupos.FirstOrDefaultAsync(gru => gru.GrupoId == grupoId && gru.EmpresaId == empresaId);
+
+            context.Remove(grupo);
+
+            return await Save();
+        }
+
+        public async Task<bool> GrupoExiste(int grupoId)
+        {
+            var grupoExiste = await context.Grupos.AnyAsync(gru => gru.GrupoId == grupoId);
+
+            return grupoExiste; 
+        }
+
+        public async Task<bool> GrupoPerteneceAlaEmpresa(int grupoId, int empresaId)
+        {
+            var grupoPerteneceAlaEmpresa = await context.Grupos.AnyAsync(gru => gru.GrupoId == grupoId && gru.EmpresaId == empresaId);
+
+            return grupoPerteneceAlaEmpresa;
         }
 
         public async Task<bool> GuardarGrupo(GrupoDTO grupoDTO, int empresaId)
@@ -41,9 +72,16 @@ namespace d_angela_variedades.Repositorio
             return await Save();
         }
 
-        public async Task<Grupos> ObtenerGrupoAEditar(int grupoId)
+        public async Task<Grupos> ObtenerGrupoAEditar(int grupoId, int empresaId)
         {
-            var grupo = await context.Grupos.FirstOrDefaultAsync(grupo => grupo.GrupoId == grupoId);
+            var grupo = await context.Grupos.FirstOrDefaultAsync(grupo => grupo.GrupoId == grupoId && grupo.EmpresaId == empresaId);
+
+            return grupo;
+        }
+
+        public async Task<List<Grupos>> ObtenerGrupoPorElNombre(string nombreGrupo, int empresaId)
+        {
+            var grupo = await context.Grupos.Where(gru => gru.NombreGrupo == nombreGrupo && gru.EmpresaId == empresaId).ToListAsync();
 
             return grupo;
         }

@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <form data-bind="submit: manejarSubmitEditarCliente">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-12">
                             <div class="mb-4">
                                 <label for="NombreProducto" class="form-label">Nombre del cliente</label>
                                 <input type="text"
@@ -25,9 +25,10 @@
                             <div class="mb-4">
                                 <label for="NombreCategoria" class="form-label">Telefono</label>
                                 <input type="number"
-                                       data-bind="value: telefono"
+                                       data-bind="value: telefono, event: { input: enforceMaxTelefonoLength }"
                                        class="form-control"
                                        id="nombre">
+                                <div><span data-bind="text: charCountTelefonoCliente"></span>/10</div>
                                 <div class="error error-producto text-danger" data-bind="validationMessage: telefono"></div>
                             </div>
 
@@ -35,7 +36,7 @@
                                 <label for="categorias" class="form-label">Grupo</label> <br>
                                 <select class="custom-select form-select" id="categorias"
                                         data-bind="options: gruposSeleccion,
-                                                                   optionsText: 'nombre',
+                                                                   optionsText: 'nombreGrupo',
                                                                    optionsValue: 'grupoId',
                                                                    value: grupo">
                                 </select>

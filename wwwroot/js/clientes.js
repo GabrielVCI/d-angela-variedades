@@ -7,14 +7,12 @@
                 telefono: '',
                 nota: '',
                 grupo: '',
-                idGrupo: '', 
+                grupoId: '', 
             }));
 };
 
 async function guardarCliente(cliente) {
-
-
-    console.log(cliente)
+     
     try {
         let grupoId = cliente.grupo.grupoId;
         
@@ -37,7 +35,15 @@ async function guardarCliente(cliente) {
         });
 
         if (!response.ok) {
-            console.log(response)
+            if (response.status == 422) {
+                mostrarMensajeError("Ya tienes un cliente con este nombre"); 
+                return;
+            }
+             
+            else if (response.status == 421) {
+                mostrarMensajeError("Ya tienes un cliente con este telefono"); 
+                return;
+            } 
             manejarErrorApi(response);
             return;
         }
@@ -46,7 +52,7 @@ async function guardarCliente(cliente) {
         MensajeDeExito("El cliente ha sido agregado");
 
     } catch (error) {
-        console.log(error);
+         
         manejarErrorApi(error);
         return;
     }
@@ -71,7 +77,7 @@ async function ObtenerClientes() {
 
     const json = await respuesta.json();
     clientesListadoViewModel.clientes([]);
-
+     
     json.forEach(cliente => {
         const viewModel = new clienteElementoListadoViewModel(cliente);
         clientesListadoViewModel.clientes.push(viewModel);
@@ -89,8 +95,7 @@ function focusOutCliente() {
 
 async function obtenerClienteAEditar(cliente) {
 
-    try {
-
+    try { 
         const response = await fetch(`${urlClientes}/${cliente.idCliente()}`, {
             method: 'GET',
             headers: {
@@ -104,7 +109,7 @@ async function obtenerClienteAEditar(cliente) {
             return;
         }
         const json = await response.json();
-
+      
         clienteEditarViewModel.idCliente = json.idCliente;
         clienteEditarViewModel.nombre(json.nombre);
         clienteEditarViewModel.nota(json.nota);
@@ -129,17 +134,15 @@ async function obtenerClienteAEditar(cliente) {
 async function editarCliente(cliente) {
 
     try {
-
+         
         completandoAccionTimer();
 
         const object = {
             "NombreCliente": cliente.nombreCliente,
             "Telefono": cliente.telefono,
-            "GrupoId": grupoId,
+            "GrupoId": cliente.grupo,
             "Nota": cliente.nota
         }
-
-
         const data = JSON.stringify(object);
 
         const response = await fetch(`${urlClientes}/${cliente.id}`, {
@@ -148,16 +151,24 @@ async function editarCliente(cliente) {
             headers: {
                 'Content-Type': "application/json"
             }
-
         });
 
 
         if (!response.ok) {
+            if (response.status == 422) {
+                mostrarMensajeError("Ya tienes un cliente con este nombre");
+                return;
+            }
+
+            else if (response.status == 421) {
+                mostrarMensajeError("Ya tienes un cliente con este telefono");
+                return;
+            } 
             manejarErrorApi(response);
             return;
         }
 
-        const json = response.json();
+        const json = await response.json();
         mensajeExitoAccionCompletada("¡El cliente ha sido editado correctamente!");
         await ObtenerClientes();
         modalEditarClienteBSTP.hide();
@@ -165,7 +176,7 @@ async function editarCliente(cliente) {
 
 
     } catch (error) {
-
+        console.log(error)
         manejarErrorApi(error);
         return;
     }
@@ -205,7 +216,7 @@ function confirmarEliminacionDelCliente(cliente) {
             return;
         },
 
-        titulo: `¿Desea borrar el cliente ${producto.nombre()}?`,
+        titulo: `¿Desea borrar el cliente ${cliente.nombre()}?`,
 
         text: "Se eliminará de su lista de clientes."
     });
@@ -233,6 +244,7 @@ async function obtenerClienteConElNombreOTelefono(nombre_telefono_cliente) {
         });
 
         if (!response.ok) {
+             
             response.status == 404 ? mostrarMensajeError("No tienes clientes con este nombre o telefono") : manejarErrorApi(response);
             clientesListadoViewModel.cargando(false);
             return;
@@ -241,7 +253,7 @@ async function obtenerClienteConElNombreOTelefono(nombre_telefono_cliente) {
         const json = await response.json();
         clientesListadoViewModel.clientes([]);
 
-        json.forEach(producto => {
+        json.forEach(cliente => {
             const viewModel = new clienteElementoListadoViewModel(cliente);
             clientesListadoViewModel.clientes.push(viewModel);
         });
